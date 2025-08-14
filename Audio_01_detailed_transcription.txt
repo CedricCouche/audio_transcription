@@ -1,0 +1,630 @@
+[0.00s -> 15.84s] Hello everyone, welcome to Monday of week one.
+[15.84s -> 20.98s] This course is information theory B 8.4.
+[20.98s -> 24.00s] I'm Sam Cohen, you'll be seeing a lot of me.
+[24.00s -> 26.82s] Okay, information theory, what's this course about?
+[26.82s -> 31.90s] We are going to try and understand mathematically what happens in communication.
+[31.90s -> 35.30s] We're going to be asking three questions as the course goes on.
+[35.30s -> 40.98s] The first is, how can we describe the amount of information we get from a signal?
+[40.98s -> 43.72s] How do we quantify that in a useful way?
+[43.72s -> 47.26s] That's going to be the first couple of lectures while we get all of that going
+[47.26s -> 51.54s] and build some of the groundwork for notation and terminology.
+[51.54s -> 54.38s] Then we're going to move on to question two.
+[54.38s -> 60.58s] Given I have some signal, some text, some message, something that I wish to store
+[60.58s -> 63.42s] and remember, how do I do that efficiently?
+[63.42s -> 70.18s] How can I build an efficient encoding of the data that I receive so that I can store
+[70.18s -> 74.58s] the minimal amount and still reconstruct perfectly my original information?
+[74.58s -> 78.46s] In this sense, coding is different to encryption.
+[78.46s -> 80.96s] This course is not going to touch on encryption.
+[80.96s -> 83.48s] Information is about how do I make it secret.
+[83.48s -> 85.00s] For that, we need to do different things.
+[85.00s -> 90.96s] Here we're talking about encoding, which is how do I represent information efficiently?
+[90.96s -> 95.44s] The third thing we're going to do in the course then is we're going to look at
+[95.44s -> 99.32s] how do I communicate information efficiently?
+[99.32s -> 103.88s] In particular, how do I communicate when the medium of communication that I'm sending
+[103.88s -> 106.68s] it along might be noisy?
+[106.68s -> 112.60s] This is a theory that really developed in the 1940s around radio, but it is the basis
+[112.60s -> 119.48s] of pretty much all communication technology, so we'll touch on 5G standards at points
+[119.48s -> 123.84s] as we go along, for example.
+[123.84s -> 127.44s] The course lecture notes are available online.
+[127.44s -> 128.44s] Go have fun.
+[128.44s -> 133.56s] I will update typos, et cetera, as we go through the course and I notice them,
+[133.56s -> 135.92s] but they should be reasonably stable.
+[135.92s -> 139.56s] It also references a couple of textbooks, which are very good.
+[139.56s -> 144.72s] You can go and have a look at if you would like to look at that as well.
+[144.72s -> 149.52s] I think that's all of the preamble, so let's get on with things.
+[149.52s -> 150.52s] Okay.
+[150.52s -> 155.04s] What we're going to be doing is we're going to be thinking about messages, data,
+[155.04s -> 157.64s] and the key thing is they need to be not completely predictable.
+[157.64s -> 161.16s] If you've got a perfectly predictable message, you don't need to do anything to remember
+[161.16s -> 163.44s] it.
+[163.44s -> 168.88s] The basic model that we have for something which isn't perfectly predictable is through
+[168.88s -> 170.52s] probability theory.
+[170.52s -> 174.80s] I brought in a deck of cards here because there's a few things that we need to make
+[174.80s -> 178.20s] sure everyone is clear.
+[178.20s -> 182.84s] First of all, I can't shuffle to save my life, but we need to be able to talk
+[182.84s -> 186.88s] about the same things when we're talking about random variables.
+[186.88s -> 192.52s] If you are doing the Martin Gauss through measure theory course, this will hopefully
+[192.60s -> 194.32s] be reasonably obvious to you.
+[194.32s -> 197.44s] In this course, we won't need a lot of measure theory.
+[197.44s -> 201.30s] We won't need that whole formalism, but there's still things that are important
+[201.30s -> 202.72s] for us.
+[202.72s -> 209.12s] The first is the distinction between a random variable and its distribution.
+[209.12s -> 219.68s] A random variable is, I've shuffled my cards, there we go, is that a heart?
+[219.68s -> 222.00s] For everyone in this room at the moment, that is random.
+[222.00s -> 223.00s] Nobody knows what it is.
+[223.00s -> 224.36s] I didn't look.
+[224.36s -> 225.76s] So it is a random variable.
+[225.76s -> 226.76s] Is this a heart?
+[226.76s -> 229.12s] It's a true or false question.
+[229.12s -> 233.16s] We can argue for a long time as to whether this is really random given I'm holding
+[233.16s -> 235.72s] a card in my hand and all we have to do is look at it.
+[235.72s -> 239.32s] If someone placed a mirror behind me, we would know the answer.
+[239.32s -> 240.32s] So is it random?
+[240.32s -> 241.32s] It doesn't matter.
+[241.32s -> 245.40s] We are modeling it as if it is random until right now where we notice it's the
+[245.40s -> 249.68s] six of diamonds and all the randomness is gone.
+[249.68s -> 253.32s] So there are some things about random variables that depend on the individual
+[253.32s -> 254.52s] random variable.
+[254.52s -> 259.28s] If I shuffle the deck and I do this, is this a heart?
+[259.28s -> 262.36s] You cannot tell me no, it's the six of diamonds because we just saw the six
+[262.36s -> 263.36s] of diamonds.
+[263.36s -> 266.16s] This is a different random variable.
+[266.16s -> 270.88s] So in this case, three of spades, something else.
+[270.88s -> 276.28s] But there are properties of random variables which are known only based on
+[276.28s -> 278.96s] their distribution, on their law.
+[278.96s -> 284.84s] So here, things which are the same every time I shuffle the deck of cards.
+[284.84s -> 288.64s] So here we've got, if I do this, I can shuffle them.
+[288.64s -> 292.12s] I can take these two cards.
+[292.12s -> 294.04s] I can ask you, what's the probability this is a heart?
+[294.04s -> 295.96s] What's the probability this is a heart?
+[295.96s -> 300.00s] And you'll probably tell me if I've removed the jokers, it's one in four for each
+[300.00s -> 301.00s] of them.
+[301.00s -> 305.92s] OK, that statement, one in four, is a statement about the distribution, the law
+[305.92s -> 307.16s] of the random variable.
+[307.72s -> 311.76s] It is not a statement about exactly what is written on this card.
+[311.76s -> 315.68s] So it only depends on the randomness, on the law.
+[315.68s -> 318.60s] It doesn't depend on the actual outcome of the cards.
+[318.60s -> 320.48s] Now the law of a random variable tells us a lot.
+[320.48s -> 324.16s] OK, in fact, it's a quarter.
+[324.16s -> 328.28s] But it doesn't tell us the fact that these two things are correlated.
+[328.28s -> 331.24s] So these are different random variables, but they are related.
+[331.24s -> 334.48s] So the fact I've now shown you that that is the five of spades, tells you this
+[334.52s -> 337.96s] card is slightly less likely to be a spade and slightly more likely to be a
+[337.96s -> 340.28s] heart than what I had before.
+[340.28s -> 342.68s] And in fact, oh, six of diamonds.
+[342.68s -> 347.32s] Anyway, enough card tricks or really bad card tricks.
+[347.32s -> 349.56s] We just need some notation.
+[349.56s -> 353.00s] So in this course, we are going to predominantly focus on random
+[353.00s -> 356.20s] variables taking finitely many outcomes.
+[356.20s -> 360.68s] By finitely many outcomes, this means that we can get around a lot of
+[360.72s -> 365.32s] technical problems and we can just say the law of a random variable or the
+[365.32s -> 368.32s] law or distribution of a random variable is described by...
+[390.80s -> 393.44s] It's probability mass function.
+[400.96s -> 405.00s] Which we're going to denote little p.
+[405.00s -> 411.12s] And little p is a function that takes a set of outcomes x.
+[411.12s -> 412.84s] These are the possible values that it can take.
+[416.92s -> 419.00s] And maps them to zero to one.
+[419.04s -> 422.28s] And we're going to allow zero and one as probabilities throughout this course.
+[422.28s -> 424.20s] It makes our lives a lot simpler.
+[425.96s -> 433.08s] OK, so I'm not going to fuss too much about the details, as I said, of measure
+[433.08s -> 436.96s] theory, about the world of what are the outcomes, what are the events,
+[436.96s -> 439.20s] what's the map from...
+[439.20s -> 441.72s] If you go through a measure theoretic formulation, you talk about a random
+[441.72s -> 444.80s] variable, which is a map from the outcomes in the world to the real
+[444.80s -> 448.64s] numbers. Here, we're just going to say my random variable takes values in
+[448.64s -> 452.88s] some set x and I have a probability mass function p, which gives me the
+[452.88s -> 455.36s] probabilities of each outcome.
+[455.36s -> 461.32s] So we should say that the probability x equals little x.
+[461.32s -> 469.36s] So this is the probability that x equals little x is just p of x.
+[469.36s -> 471.16s] There we are.
+[471.16s -> 473.96s] OK, we can write this in various ways.
+[474.00s -> 497.52s] We can also write px for the distribution on R induced by x.
+[497.52s -> 498.52s] What do I mean by this?
+[498.56s -> 500.68s] Well, px is...
+[500.68s -> 515.48s] So px of a set AB is equal to the probability that x is in AB.
+[515.48s -> 517.56s] OK, so this is now a law.
+[517.56s -> 526.40s] So it's a map on intervals or more generally on sets or subsets of R.
+[526.40s -> 537.48s] But we can also consider the cumulative distribution function,
+[537.48s -> 554.52s] which I'm sure you've all seen, or CDF, which is often written f of x of y is
+[554.52s -> 559.44s] the probability that x is less than or equal to y.
+[559.44s -> 566.04s] OK, now for univariate random variables, these are all equivalent.
+[566.04s -> 569.44s] OK, as long as we take finitely many outcomes, knowing the probability mass
+[569.44s -> 574.72s] function tells us the law, tells us the CDF.
+[574.72s -> 576.84s] They're all the same thing.
+[576.84s -> 580.88s] Of course, there are some things that are a bit more interesting, a bit
+[580.88s -> 583.56s] richer, and a lot of this course is going to be about looking at what
+[583.56s -> 587.28s] happens when I have multiple random variables happening at the same time,
+[587.28s -> 588.28s] or at least sequentially.
+[591.16s -> 597.80s] OK, so everyone happy with the terminology before I get going?
+[597.80s -> 599.52s] Because we're just going to use this.
+[599.52s -> 601.88s] I'm not going to come back to it.
+[601.88s -> 604.12s] If there's questions, please heckle.
+[604.12s -> 606.64s] It's far more fun to be heckled.
+[606.64s -> 609.64s] OK, so basic definitions.
+[614.32s -> 620.88s] So what we need to do is we need to define the amount of randomness in the system.
+[620.88s -> 624.80s] OK, so when I shuffle a deck of cards and deal out a card, you sort of know
+[624.80s -> 628.16s] something about how random that process is.
+[628.16s -> 632.32s] And you can tell me that it feels like that's more random than if I
+[632.32s -> 635.16s] flip a coin and there's two outcomes.
+[635.16s -> 638.68s] The fact I've got two outcomes that are equally likely, that seems less
+[638.68s -> 641.88s] random than having 52 outcomes, which are all random.
+[641.88s -> 644.88s] Having 52 outcomes, which are all equally likely.
+[644.88s -> 649.40s] So we want to try and quantify this carefully.
+[649.40s -> 654.00s] So this was the work of this guy in this book, Claude Shannon.
+[654.00s -> 654.92s] Not really in this book.
+[654.92s -> 658.08s] It's the second half of this book, which was a series of papers he wrote
+[658.08s -> 662.80s] in the 1940s, which developed the area of information theory.
+[662.80s -> 668.60s] So what he did is he defined what he called entropy.
+[668.60s -> 670.44s] Now, the term entropy has an interesting history.
+[670.44s -> 675.52s] It goes back to at least the Boltzmann and the basics of statistical physics,
+[675.52s -> 678.12s] statistical mechanics.
+[678.12s -> 680.76s] It's a made up word.
+[680.76s -> 689.20s] It comes from entropy, meaning in changing, just like energy is in work.
+[689.20s -> 694.00s] And again, again, again, whichever.
+[694.00s -> 695.72s] I don't actually speak Greek.
+[695.72s -> 702.16s] But so Clausius, we think, made up the term to describe something
+[702.16s -> 704.00s] a bit similar to randomness.
+[704.00s -> 709.52s] And then Shannon took the term, used it on the suggestion of von Neumann,
+[709.52s -> 712.04s] who said, you should call this thing you're defining entropy,
+[712.04s -> 713.20s] because nobody knows what it is.
+[713.20s -> 717.32s] Anyway, so we're going to try and define entropy.
+[717.32s -> 729.12s] Entropy, entropy, how to do this.
+[729.12s -> 733.00s] So there's a few ways of motivating this.
+[733.00s -> 738.52s] One is to say, well, let's begin by thinking about a function which
+[738.52s -> 744.36s] should measure how surprised we are when something happens.
+[744.40s -> 747.92s] So we want a function.
+[747.92s -> 762.44s] We want a function s, which should take events to the reals
+[762.44s -> 773.40s] to describe our surprise, whatever that means.
+[773.40s -> 782.52s] OK, so what we might think is, so we're going to take an event is x is in some set.
+[782.52s -> 786.92s] How surprised should we be when we observe x is in some set?
+[786.92s -> 789.84s] We propose some axioms.
+[789.84s -> 804.16s] So one, the surprise associated with an event A depends continuously on the probability that x is in the set A.
+[804.16s -> 810.76s] There's a statement, I'm just saying continuity, turns out to be quite critical at a technical level.
+[810.88s -> 814.68s] But feels fairly innocuous as a statement.
+[814.68s -> 826.68s] Two, the surprise of something is decreasing in the probability of the event.
+[826.68s -> 830.68s] So if something's more likely, it's less surprising.
+[830.68s -> 836.68s] OK, so we're going to take an event, and we're going to take an event,
+[836.68s -> 840.68s] and we're going to take an event, and we're going to take an event.
+[841.60s -> 850.60s] And three, if I give you the surprise of A and B happening,
+[850.60s -> 857.60s] this should be, well, if the two events A and B are independent, I should just add the surprise.
+[857.60s -> 867.60s] So s of A plus s of B if A and B are independent.
+[871.60s -> 881.60s] Now, the interesting thing is this linearity requirement tells us a lot about the function.
+[881.60s -> 889.60s] In fact, this can really only be satisfied by a very particular set of functions.
+[889.60s -> 893.60s] And once we add that it's continuous, this defines everything.
+[894.52s -> 920.52s] So the only function satisfying this assumption is s of A is equal to minus log of the probability x is in A.
+[920.52s -> 922.52s] So that's the only function that satisfies it.
+[923.44s -> 925.44s] This is ultimately a result due to Cauchy.
+[925.44s -> 928.44s] If you go and you Google Cauchy's functional equation,
+[928.44s -> 935.44s] you will find the proof that effectively gives you this, that you get this log term.
+[935.44s -> 939.44s] The log comes out, you have to think of this as a function of log probabilities.
+[939.44s -> 945.44s] If you write it as a function of log probabilities, then it's Cauchy's functional equation.
+[945.44s -> 950.44s] OK, so that tells us how surprising an event is, but we're not interested just in an event.
+[951.36s -> 957.36s] We're interested in a random variable, and random variables can be associated with multiple outcomes.
+[957.36s -> 963.36s] So instead of thinking about the surprise of one event, let's think about the average surprise.
+[964.28s -> 972.28s] So we can now get our definition of entropy.
+[973.20s -> 994.20s] OK, the entropy hBx in base B of a random variable x is
+[995.12s -> 1009.12s] hB of x is equal to minus the sum over all the possible outcomes of x equals x.
+[1009.12s -> 1021.12s] So the probability of the outcome times the log to base B of the probability of the outcome.
+[1021.12s -> 1026.12s] So you can see that this is somehow the average of my earlier surprise function.
+[1026.12s -> 1030.12s] So the average surprise is the entropy.
+[1030.12s -> 1036.12s] Now there's a few things here. We said that the probability could be zero.
+[1036.12s -> 1042.12s] Log of zero is not a nice thing to compute, but at least it's multiplied by the probability again.
+[1042.12s -> 1049.12s] We know that x log x gets very close to zero as we approach zero, so we just define it to be zero.
+[1050.12s -> 1058.12s] Where zero log zero is zero by definition.
+[1061.12s -> 1065.12s] We also, so the base here, we can choose whatever base we like.
+[1065.12s -> 1068.12s] That's completely up to us.
+[1068.12s -> 1074.12s] By convention we're going to normally be working in base two because we're dealing with binary signals.
+[1074.12s -> 1086.12s] OK, by convention we use B equals two.
+[1086.12s -> 1093.12s] And so in this course, if I write log, I always mean to base two. Yes.
+[1095.12s -> 1100.12s] Yes, it's finite. So we're always going to be working on finite sets.
+[1100.12s -> 1104.12s] If this was not finite, then we would have to do something a little bit more clever.
+[1104.12s -> 1110.12s] And in fact, this definition doesn't work. You can't define the entropy on a general set.
+[1110.12s -> 1114.12s] You can have it as being infinite as long as it's still countable.
+[1114.12s -> 1122.12s] But if it's on a continuous space, you need to make the definition a little bit differently.
+[1125.12s -> 1129.12s] So what you can do is you can define the density and you integrate.
+[1129.12s -> 1134.12s] So you integrate the log of the density. That's a good idea.
+[1134.12s -> 1136.12s] It gives you a notion of entropy.
+[1136.12s -> 1144.12s] But as soon as you've taken a density, you've taken the fact that it's a density with respect to the integration, the Lebesgue measure.
+[1144.12s -> 1146.12s] And so the Lebesgue measure is coming in.
+[1146.12s -> 1148.12s] I'll come back to this point.
+[1152.12s -> 1156.12s] Why do we call it H? Nobody knows.
+[1156.12s -> 1159.12s] I looked it up. I spent quite a bit of time trying to trace it down.
+[1159.12s -> 1167.12s] We think maybe it's because this is not really an H. It's meant to be an eta, a capital Greek eta.
+[1167.12s -> 1171.12s] But we really don't know. Yeah.
+[1171.12s -> 1178.12s] So who knows? It's an H. Everyone uses H.
+[1178.12s -> 1183.12s] OK, there's a few. This is the basic definition.
+[1183.12s -> 1189.12s] We will see this in a few other ways coming out as we go through the course.
+[1189.12s -> 1191.12s] OK, comments.
+[1197.12s -> 1201.12s] The notation H of X.
+[1201.12s -> 1206.12s] Notice I'm just dropping the B because B equals 2.
+[1206.12s -> 1231.12s] So H is a little confusing as H depends on the law of X not the realized random variable.
+[1237.12s -> 1246.12s] So if I give you two different random variables which have the same distribution, their entropy is the same.
+[1246.12s -> 1250.12s] In this way, writing H of X is a bit like writing the expected value of X.
+[1250.12s -> 1254.12s] The expected value is another thing that only depends on the law.
+[1254.12s -> 1258.12s] But we write it as a function of the random variable itself just by convention.
+[1258.12s -> 1260.12s] Makes life easier.
+[1260.12s -> 1262.12s] So we just need to be a little bit careful.
+[1262.12s -> 1288.12s] And it means that because of this we can write H of PX or H of P where this is the PMF.
+[1288.12s -> 1293.12s] So we can write these and it means exactly the same thing.
+[1293.12s -> 1295.12s] It's just a change of notation.
+[1295.12s -> 1299.12s] Whatever makes it easiest for us in terms of emphasizing the thing we want.
+[1299.12s -> 1304.12s] So that's just notation.
+[1304.12s -> 1313.12s] We can also write H of X.
+[1313.12s -> 1325.12s] We can write it in terms of the expected value of minus log P of X.
+[1325.12s -> 1329.12s] So let me just make sure we're all clear on what this means.
+[1329.12s -> 1331.12s] Here X is the random variable.
+[1331.12s -> 1336.12s] P of X is the PMF evaluated at the random point X.
+[1336.12s -> 1338.12s] So this is the random outcome.
+[1338.12s -> 1340.12s] P is evaluated at a random outcome.
+[1340.12s -> 1347.12s] I take the log of that real number, minus log, and then I take the expected value of that random variable.
+[1347.12s -> 1348.12s] This is the same thing.
+[1348.12s -> 1353.12s] So it's another way of writing it which is more focusing on the fact that X is a random variable.
+[1353.12s -> 1356.12s] But the only thing that really matters is the law of X.
+[1356.12s -> 1365.12s] So it's telling us about the law of X by evaluating an expected value.
+[1365.12s -> 1367.12s] I said we use B equals 2.
+[1367.12s -> 1368.12s] That's just convention.
+[1368.12s -> 1369.12s] We could use E.
+[1369.12s -> 1371.12s] We could use 10.
+[1371.12s -> 1373.12s] We could use 256.
+[1373.12s -> 1379.12s] If we use 2, this has units which are bits.
+[1379.12s -> 1382.12s] If we use E, it has units which are nats.
+[1382.12s -> 1386.12s] If we use 256, it has units which are bytes.
+[1386.12s -> 1388.12s] But we're just going to use bits.
+[1388.12s -> 1395.12s] But it means if you need to give this units, it has units of bits.
+[1395.12s -> 1402.12s] Okay, so let's do an example.
+[1402.12s -> 1408.12s] Okay, so I'm going to say my space X is H and T.
+[1408.12s -> 1412.12s] Thinking about tossing a coin, heads and tails are the two outcomes.
+[1412.12s -> 1420.12s] So the probability that X equals H is going to be little p.
+[1420.12s -> 1423.12s] As you can see, I'm going to be completely confusing
+[1423.12s -> 1426.12s] and keep you guessing what p refers to.
+[1426.12s -> 1429.12s] But if it's ever unclear, then ask.
+[1429.12s -> 1433.12s] So here little p is a number between 0 and 1.
+[1433.12s -> 1438.12s] Alright, so this is a biased coin that I'm tossing.
+[1438.12s -> 1440.12s] So the chances of heads are p.
+[1440.12s -> 1441.12s] What's the entropy?
+[1442.12s -> 1449.12s] Then the entropy of X is minus p log p plus...
+[1449.12s -> 1456.12s] Sorry, I should say minus 1 minus p log 1 minus p,
+[1456.12s -> 1466.12s] which if I plot it, 0, 1, this is p, this is H.
+[1466.12s -> 1471.12s] You can see I can't draw to save my life.
+[1471.12s -> 1475.12s] It looks symmetric and is 0 at the two extremes.
+[1475.12s -> 1480.12s] And you can see that that's because if there's no randomness, there's no surprise.
+[1480.12s -> 1485.12s] Everything is completely predictable, so you get 0 or 1.
+[1485.12s -> 1489.12s] It's nice, it's continuous, etc., as we saw by the axioms.
+[1489.12s -> 1494.12s] Now, just to make sure the notation is confusing,
+[1494.12s -> 1510.12s] we sometimes write H of p in this special case,
+[1510.12s -> 1514.12s] where p is a number between 0 and 1.
+[1514.12s -> 1519.12s] Just to make sure we've overloaded our notation to the point of confusion.
+[1519.12s -> 1525.12s] Okay, so if this case comes up often enough, it's useful to have some notation for it.
+[1525.12s -> 1541.12s] In this case, we have that H of X equals H of p equals H of pX.
+[1541.12s -> 1543.12s] There we are. Yeah, I'll be good.
+[1543.12s -> 1553.12s] So H of p sub X is the PMF, pX, which is equal to H of pX.
+[1553.12s -> 1558.12s] We choose that notation to make our lives easier as we wish.
+[1558.12s -> 1563.12s] Okay, so that was a single event, but we can do something a bit more interesting.
+[1563.12s -> 1582.12s] For example, if X is a two-dimensional vector of the form X1, X2.
+[1582.12s -> 1586.12s] Okay, so now I've got X is now living in still a finite set,
+[1586.12s -> 1590.12s] but it's a set that's arranged as a two-dimensional vector.
+[1590.12s -> 1596.12s] So I've now got finitely many outcomes for X1, finitely many outcomes for X2, and I write them as a vector.
+[1596.12s -> 1608.12s] So if I have this, then, so let's just specify X1 is in, I'll save myself,
+[1608.12s -> 1615.12s] XI is in curly XI, for I equals 1 and 2.
+[1615.12s -> 1625.12s] Then H of X, so X being the two-dimensional vector, that's the same as H of X1, X2.
+[1625.12s -> 1629.12s] Just taken together, I just drop some brackets, write them as a pair.
+[1629.12s -> 1641.12s] And this is equal to negative the sum of a little x1, x1, little x2 in x2 of,
+[1641.12s -> 1655.12s] well, I need the probability x1, x2, x1, x2, log probability x1, x2, x1, x2.
+[1655.12s -> 1660.12s] So this is the probability mass function of the pair evaluated at the two points,
+[1660.12s -> 1662.12s] and I add them up over all possible points.
+[1662.12s -> 1668.12s] So this is just treating this two-dimensional object as if it was a single random variable,
+[1668.12s -> 1674.12s] because it is a random variable just arranged as a vector.
+[1674.12s -> 1679.12s] Okay, well, this is an interesting case because we can now do some things with it.
+[1679.12s -> 1704.12s] So if x1, x2 are independent, so P x1, x2, x1, x2 is equal to P x1, x1, P x2, x2.
+[1704.12s -> 1708.12s] What that means is that the probability distribution, saying they're independent,
+[1708.12s -> 1715.12s] says that the probability distribution factorizes into the product of the two marginal distributions.
+[1715.12s -> 1720.12s] Well, if that's true, I substitute that in here.
+[1720.12s -> 1725.12s] I then use that the log of a product is the sum of the logs.
+[1725.12s -> 1734.12s] So I get H of x, well, skipping a couple of steps, but not all of them,
+[1734.12s -> 1736.12s] and I'm not going to bother writing all the indices.
+[1736.12s -> 1761.12s] So it's P x1, x2 log P of x1 minus the sum of P x1, x2, x1, x2, x2.
+[1761.12s -> 1764.12s] So all I've done here to go from here to here is I've used this.
+[1764.12s -> 1767.12s] Substitute it in, break up the log into two terms.
+[1767.12s -> 1771.12s] So now that I have this, I notice that x2 only appears in one place.
+[1771.12s -> 1774.12s] This is a sum over x1s and x2s.
+[1774.12s -> 1777.12s] And when you add up over all the x2s, it's a probability distribution.
+[1777.12s -> 1794.12s] So this turns into minus the sum of P x1 log P x1 over x2.
+[1795.12s -> 1812.12s] So P log P x2, which you'll recognize as the entropy of x1 plus the entropy of x2.
+[1812.12s -> 1815.12s] So if they're independent, then you just add the entropies together.
+[1815.12s -> 1820.12s] And this is completely unsurprising because we had this assumption about our surprise.
+[1820.12s -> 1827.12s] This is just the average surprise, so the property carries over directly.
+[1827.12s -> 1833.12s] It also tells us that if I've got independent and identically distributed,
+[1833.12s -> 1839.12s] then the joint entropy of a pair is just double the original entropy.
+[1839.12s -> 1842.12s] And that's the fact we're going to use a lot.
+[1842.12s -> 1847.12s] All right. So that's entropy.
+[1847.12s -> 1852.12s] There's a few other related quantities that are going to prove useful for us.
+[1852.12s -> 1858.12s] So one is the divergence.
+[1858.12s -> 1861.12s] Okay.
+[1861.12s -> 1864.12s] Write this as a definition.
+[1864.12s -> 1867.12s] Definition of the divergence.
+[1867.12s -> 1879.12s] Sum set P and Q be PMFs on sum set X.
+[1879.12s -> 1881.12s] Two probability mass functions.
+[1881.12s -> 1884.12s] We're trying to say how different the two distributions are.
+[1884.12s -> 1889.12s] We say D P double bar Q.
+[1889.12s -> 1904.12s] And this is equal to the sum of PX log PX over QX.
+[1904.12s -> 1918.12s] Is the divergence between P and Q.
+[1918.12s -> 1920.12s] Okay.
+[1920.12s -> 1924.12s] With zero cross log zero.
+[1924.12s -> 1928.12s] Zero times log zero equals zero.
+[1928.12s -> 1933.12s] And the divergence of P and Q equals infinite.
+[1934.12s -> 1951.12s] If there exists an X such that Q of X equals zero and P of X is not zero.
+[1951.12s -> 1953.12s] Okay.
+[1953.12s -> 1955.12s] This is the only logical way of dealing with it.
+[1955.12s -> 1959.12s] So if Q is sometimes zero and P is not zero, this is infinite.
+[1959.12s -> 1960.12s] Log is infinite.
+[1960.12s -> 1961.12s] There you are.
+[1961.12s -> 1963.12s] We've got an infinite answer.
+[1963.12s -> 1971.12s] So this quantity here is sometimes called the information divergence or the Kullback-Leibler divergence or the relative entropy.
+[1971.12s -> 1975.12s] This is the thing that generalizes to infinite states well.
+[1975.12s -> 1981.12s] So on your question a moment ago about what happens if we go outside infinite states, finite states.
+[1981.12s -> 1989.12s] If we go to infinite states, this is something which has a perfectly good definition as a way of extending the definition of entropy.
+[1989.12s -> 1993.12s] This, not so much.
+[1993.12s -> 1995.12s] Okay.
+[1995.12s -> 2003.12s] Then I've got this P dominates it.
+[2003.12s -> 2006.12s] So you've got a zero times something.
+[2006.12s -> 2011.12s] So that's fine.
+[2011.12s -> 2016.12s] Okay.
+[2016.12s -> 2022.12s] So given X is distributed with P.
+[2022.12s -> 2028.12s] So this is just a notation for saying P is the mass function for X.
+[2028.12s -> 2030.12s] Okay.
+[2030.12s -> 2037.12s] The divergence of P and Q can be written.
+[2037.12s -> 2040.12s] Well, you look at this and you say that looks like an expected value.
+[2040.12s -> 2049.12s] So I write it as the expected value of log P of X over Q of X.
+[2049.12s -> 2052.12s] So this is just a random variable here and I've just got the log.
+[2052.12s -> 2054.12s] So there we are.
+[2054.12s -> 2059.12s] That's equal to, I can split this log into two terms.
+[2059.12s -> 2068.12s] The expected value of log one over Q X.
+[2068.12s -> 2078.12s] Minus the expected value of log one over P X.
+[2078.12s -> 2083.12s] Which is equal to the expected value.
+[2083.12s -> 2089.12s] I can write it as the minus the expected value of log Q X.
+[2089.12s -> 2096.12s] Minus the entropy of X.
+[2096.12s -> 2098.12s] So there's various ways to look at this.
+[2098.12s -> 2106.12s] You can think of this as measuring how different P and Q are.
+[2106.12s -> 2108.12s] It's always non-negative.
+[2108.12s -> 2110.12s] We'll see that in a minute.
+[2110.12s -> 2114.12s] So this quantity, while there's nothing immediate that says this should be non-negative,
+[2114.12s -> 2116.12s] it turns out it is a non-negative quantity.
+[2116.12s -> 2118.12s] It is not symmetric.
+[2118.12s -> 2120.12s] And it may be infinite.
+[2120.12s -> 2123.12s] And those two things mean it can't be a metric.
+[2123.12s -> 2127.12s] So this is not a metric on the space of probability distributions.
+[2127.12s -> 2129.12s] It's fairly close to a metric.
+[2130.12s -> 2133.12s] In fact, if you look at what's called the Jensen-Shannon divergence,
+[2133.12s -> 2137.12s] which is where you take D of P Q plus D of Q P,
+[2137.12s -> 2141.12s] and then you take a square root, that turns into a metric.
+[2141.12s -> 2146.12s] But we're not going to get into that.
+[2146.12s -> 2150.12s] But it's quite useful that this is asymmetric, as we'll see in some examples.
+[2150.12s -> 2154.12s] So let's ask ourselves a question.
+[2154.12s -> 2158.12s] So example.
+[2158.12s -> 2164.12s] So let's say X is equal to 0, 1.
+[2164.12s -> 2166.12s] Tossing a coin.
+[2166.12s -> 2168.12s] Well, we're going to toss a coin, but I'm not going to tell you.
+[2168.12s -> 2172.12s] I've got a couple of coins I might be producing.
+[2172.12s -> 2181.12s] So if I produce the P coin, the probability of getting 0 is a half.
+[2181.12s -> 2189.12s] But if I produce the Q coin, the probability of 0 is 1.
+[2189.12s -> 2190.12s] There we are.
+[2190.12s -> 2192.12s] OK.
+[2192.12s -> 2197.12s] How many coins do I need to toss to distinguish between these coins?
+[2197.12s -> 2202.12s] How many times do I need to throw it?
+[2202.12s -> 2209.12s] So if I toss my coin once, and I observe a tail, or one,
+[2209.12s -> 2212.12s] we know which coin it was.
+[2212.12s -> 2215.12s] If I toss the coin once, and we observe a zero,
+[2215.12s -> 2219.12s] we think it's more likely that it was Q, maybe.
+[2219.12s -> 2221.12s] There's evidence for Q.
+[2221.12s -> 2225.12s] But it certainly could have been P as well.
+[2225.12s -> 2229.12s] So if we are given independent samples,
+[2229.12s -> 2235.12s] so if we observe, OK,
+[2235.12s -> 2240.12s] so 0, 0, 0, 0, 0, 1,
+[2240.12s -> 2246.12s] if I observe that sequence, we know that it was the first coin.
+[2246.12s -> 2249.12s] OK.
+[2249.12s -> 2253.12s] On the other hand,
+[2253.12s -> 2260.12s] if I observe 0, 0, 0, 0, 0, 0,
+[2260.12s -> 2266.12s] probably,
+[2266.12s -> 2271.12s] and I say probably because we need to have some way of saying what we mean by probably two things,
+[2271.12s -> 2276.12s] if I randomize the choice of coin, then that would be enough.
+[2276.12s -> 2280.12s] So you can see that this is asymmetric.
+[2280.12s -> 2287.12s] In particular, we can't exclude the possibility that we came from distribution P.
+[2287.12s -> 2290.12s] We can say it's very unlikely, we think it's more likely to be Q than P,
+[2290.12s -> 2294.12s] but we can't exclude it at this point.
+[2294.12s -> 2298.12s] And this is reflected in the fact that,
+[2298.12s -> 2303.12s] so this asymmetry
+[2303.12s -> 2307.12s] is reflected
+[2307.12s -> 2313.12s] in the fact that the
+[2313.12s -> 2319.12s] divergence of P from Q is infinite,
+[2319.12s -> 2325.12s] but the divergence of Q from P is 1.
+[2335.12s -> 2341.12s] Another little example,
+[2342.12s -> 2344.12s] just so we've done it,
+[2344.12s -> 2350.12s] if Q is uniform,
+[2350.12s -> 2356.12s] then the divergence of P from Q is 1,
+[2356.12s -> 2364.12s] oh sorry, it's log of size minus h of x
+[2364.12s -> 2370.12s] for x distributed like P.
+[2370.12s -> 2373.12s] Okay, how do I see this?
+[2373.12s -> 2378.12s] I look here, I go, oh, Q is uniform, so it's 1 over the sum,
+[2378.12s -> 2380.12s] 1 of the size of my space,
+[2380.12s -> 2383.12s] simplify that kills the 1 over, kills the minus sign,
+[2383.12s -> 2387.12s] so there just gives me log of the size of my space minus the entropy,
+[2387.12s -> 2391.12s] that's what I've written there.
+[2392.12s -> 2398.12s] Okay, the last of our basic objects is the mutual information.
+[2408.12s -> 2416.12s] Okay, so let x and y be discrete
+[2416.12s -> 2423.12s] random variables, taking values
+[2423.12s -> 2429.12s] in curly x and curly y.
+[2429.12s -> 2437.12s] The mutual information
+[2437.12s -> 2442.12s] is,
+[2442.12s -> 2446.12s] so mutual information between
+[2446.12s -> 2450.12s] x and y is
+[2450.12s -> 2454.12s] I, x, y,
+[2454.12s -> 2460.12s] so this is the information that x or y tells you about the other one.
+[2460.12s -> 2466.12s] It's equal to the sum over x's
+[2466.12s -> 2470.12s] in x over y's in y
+[2470.12s -> 2476.12s] of, well, it's the joint probability
+[2476.12s -> 2485.12s] times the log of the joint probability
+[2485.12s -> 2492.12s] divided by the individual probabilities, the marginals.
+[2492.12s -> 2500.12s] Now, I've just written this formula down,
+[2500.12s -> 2504.12s] I haven't said why this should be the definition, why?
+[2504.12s -> 2508.12s] Well, there's a few motivations.
+[2508.12s -> 2522.12s] So, if
+[2522.12s -> 2528.12s] x and y are independent, then neither of them tells you about the other.
+[2528.12s -> 2532.12s] So, if the independence should mean there's no information from one about the other,
+[2532.12s -> 2536.12s] that's what we intuitively mean, so if
+[2536.12s -> 2542.12s] p, so if I write p, x, y, p, x, p, y
+[2542.12s -> 2548.12s] are the PMFs of
+[2548.12s -> 2554.12s] x, y, x and y, then
+[2554.12s -> 2559.12s] well, the information x, y
+[2559.12s -> 2563.12s] is equal to the divergence between
+[2563.12s -> 2568.12s] p, x, y, and p, x, p, y.
+[2568.12s -> 2574.12s] So, it's how far the joint distribution is
+[2574.12s -> 2578.12s] from an independent distribution.
+[2578.12s -> 2583.12s] So, if I have two random variables and they're independent, this is their joint distribution.
+[2583.12s -> 2587.12s] But I don't have independence, I have something else. How far apart are they?
+[2587.12s -> 2591.12s] Well, we're just going to measure that with the divergence.
+[2591.12s -> 2596.12s] So, the information, the mutual information between x and y, measures this difference between
+[2596.12s -> 2601.12s] where we are versus independence. Now, you might say that the
+[2601.12s -> 2606.12s] natural way to measure how much information you get from one to the other, oh, sorry.
+[2606.12s -> 2610.12s] Why do we do it in this direction? If we swap the order,
+[2610.12s -> 2614.12s] if we say the divergence between p, x, p, y, and p, x, y,
+[2614.12s -> 2618.12s] is that also a useful function? It can be.
+[2618.12s -> 2622.12s] It's not, algebraically, it doesn't quite work out as well.
+[2622.12s -> 2626.12s] What you'll find in a lot of these things is, yes, you can often swap
+[2626.12s -> 2630.12s] the ordering and then you'll get something sensible, but
+[2630.12s -> 2635.12s] algebraically, it's just going to prove painful. So, this is a neater
+[2635.12s -> 2639.12s] way of doing it. That's all.
+[2639.12s -> 2643.12s] So, you might argue, does that answer the question? I know it doesn't really
+[2643.12s -> 2648.12s] answer the question apart from, this will make a, this one will spark joy.
+[2648.12s -> 2653.12s] Okay? You might argue
+[2653.12s -> 2657.12s] that the right way to measure information is something like correlation. You've done
+[2657.12s -> 2662.12s] stats at school, you did stats a couple of last year and the year before,
+[2662.12s -> 2667.12s] and you say, oh, I've learned correlation between two things, that measures how much one relates
+[2667.12s -> 2672.12s] to the other. And yes, it does, but that only measures linear relationships.
+[2672.12s -> 2676.12s] Okay? So, correlation, the standard Pearson correlation,
+[2676.12s -> 2680.12s] measures only the linear relationships. There are others, there's Spearman's rank
+[2680.12s -> 2684.12s] correlation, which measures how well they order together,
+[2684.12s -> 2688.12s] etc. Here, this is just measuring any sort of relationship.
+[2688.12s -> 2692.12s] It's just trying to tell us how much information
+[2692.12s -> 2696.12s] is there from one to the other.
+[2696.12s -> 2700.12s] We can also write,
+[2700.12s -> 2705.12s] the information between X and Y
+[2705.12s -> 2709.12s] is the expected value.
+[2709.12s -> 2713.12s] Well, here I'm just going to do the obvious thing. This looks like an expected value,
+[2713.12s -> 2717.12s] so I'm just going to write it as one. So, it's the expected value of log
+[2717.12s -> 2722.12s] Pxy
+[2722.12s -> 2725.12s] evaluated at the random variable x
+[2725.12s -> 2730.12s] and y, divided by
+[2730.12s -> 2735.12s] x at x, P y at y.
+[2735.12s -> 2740.12s] So, these are now the random variables
+[2740.12s -> 2744.12s] being evaluated at their probability mass function.
+[2744.12s -> 2749.12s] So, I can write this. This then gives us the expected value
+[2749.12s -> 2754.12s] of log Pxy
+[2754.12s -> 2758.12s] xy,
+[2758.12s -> 2762.12s] minus the expected value
+[2762.12s -> 2766.12s] log Px at x,
+[2766.12s -> 2770.12s] minus the expected value of log P y
+[2770.12s -> 2774.12s] at y, which you can now
+[2774.12s -> 2778.12s] look at and you say, aha, this is equal to h of x,
+[2778.12s -> 2782.12s] plus h of y,
+[2782.12s -> 2786.12s] minus h of x and y.
+[2786.12s -> 2790.12s] So, it's saying it's the entropy of x, plus the entropy of y,
+[2790.12s -> 2794.12s] minus the entropy of the pair.
+[2794.12s -> 2798.12s] So, if these things are independent, the information is zero,
+[2798.12s -> 2802.12s] because the joint entropy is the sum of the two original entropies.
+[2802.12s -> 2806.12s] Otherwise, we'll see these two are bigger than this,
+[2806.12s -> 2810.12s] and so we don't, well, we do have information.
+[2810.12s -> 2814.12s] Alright, so those are the three basic quantities
+[2814.12s -> 2818.12s] we're going to be using quite a lot. It's useful
+[2818.12s -> 2822.12s] also for us to have conditional versions.
+[2822.12s -> 2826.12s] So, we want to say, given one thing, what happens to the entropy?
+[2826.12s -> 2830.12s] So, we're going to now define, so
+[2830.12s -> 2834.12s] we can do conditional versions, let's do conditional entropy.
+[2840.12s -> 2844.12s] Okay.
+[2844.12s -> 2848.12s] So, the conditional
+[2848.12s -> 2852.12s] entropy
+[2852.12s -> 2856.12s] of y given
+[2856.12s -> 2860.12s] x, okay, the definition
+[2860.12s -> 2864.12s] feels a little bit strange. You might think, oh, it's the
+[2864.12s -> 2868.12s] entropy of the conditional distribution.
+[2868.12s -> 2872.12s] But that's not quite what we do. So, what we're going to say is
+[2872.12s -> 2876.12s] it is, we write H of y
+[2876.12s -> 2880.12s] given x, and this is
+[2880.12s -> 2884.12s] minus of the double sum of x and y
+[2884.12s -> 2888.12s] of the probabilities x
+[2888.12s -> 2892.12s] equals y, times the log
+[2892.12s -> 2896.12s] of the probability y equals y
+[2896.12s -> 2900.12s] given x equals x.
+[2900.12s -> 2904.12s] So, the point is, this is the average entropy
+[2904.12s -> 2908.12s] that I would have after conditioning. So, it's the average
+[2908.12s -> 2912.12s] how, so, how much randomness is there going to be in y
+[2912.12s -> 2916.12s] on average after I've observed x?
+[2916.12s -> 2920.12s] Does that sort of make sense? But it's an average
+[2920.12s -> 2924.12s] quantity. That's why this is still going to be a real number. This is not
+[2924.12s -> 2928.12s] going to be a random variable.
+[2928.12s -> 2932.12s] Okay. We can, of course, apply Bayes' Theorem to
+[2932.12s -> 2936.12s] get our hands on what this is a little bit more explicitly. And we
+[2936.12s -> 2940.12s] get minus the double sum of x and y of the probability
+[2940.12s -> 2944.12s] x equals x, y equals y
+[2944.12s -> 2948.12s] of the log. Well, conditional distribution, this is
+[2948.12s -> 2952.12s] the probability y equals y and x equals x.
+[2952.12s -> 2956.12s] So, the joint distribution divided by the probability x equals
+[2956.12s -> 2960.12s] x. That's just the definition of
+[2960.12s -> 2964.12s] conditional probability. Okay.
+[2964.12s -> 2968.12s] Hence, so,
+[2968.12s -> 2972.12s] the entropy
+[2972.12s -> 2976.12s] of y given x can be written. Well, we can write
+[2976.12s -> 2980.12s] this in a whole lot of different ways. One would be to break this up.
+[2980.12s -> 2984.12s] Let's pull out the x terms by themselves. So,
+[2984.12s -> 2988.12s] we'll take it as minus the sum of
+[2988.12s -> 2992.12s] probability x equals x
+[2992.12s -> 2996.12s] of the sum of y probability
+[2996.12s -> 3000.12s] y equals y given x equals x
+[3000.12s -> 3004.12s] log of the probability y equals y
+[3004.12s -> 3008.12s] given x equals x.
+[3008.12s -> 3012.12s] So, now, I sort of
+[3012.12s -> 3016.12s] put some brackets there and there. This
+[3016.12s -> 3020.12s] is the entropy of y given x
+[3020.12s -> 3024.12s] equals the little value little x.
+[3024.12s -> 3028.12s] So, if I freeze x to have this little value, this is now
+[3028.12s -> 3032.12s] the entropy of y conditioned on that value of x.
+[3032.12s -> 3036.12s] This is averaging that quantity over all
+[3036.12s -> 3040.12s] the possible values of x.
+[3040.12s -> 3044.12s] Okay. And so, you can see
+[3044.12s -> 3048.12s] this, well, there's various definitions.
+[3048.12s -> 3052.12s] So, you could write this as minus the sum
+[3052.12s -> 3056.12s] of x equals x
+[3056.12s -> 3060.12s] of the entropy of y given x equals little
+[3060.12s -> 3064.12s] x.
+[3064.12s -> 3068.12s] This would be another way of writing it, where here, this is where
+[3068.12s -> 3072.12s] notation is getting overloaded, I understand. Here, I'm
+[3072.12s -> 3076.12s] freezing the actual value of x, looking at the
+[3076.12s -> 3080.12s] conditional distribution, working with that, finding the entropy of this, average it out.
+[3080.12s -> 3084.12s] Here, I'm looking at
+[3084.12s -> 3088.12s] the object, which is the average of this thing. So, I don't
+[3088.12s -> 3092.12s] freeze the individual value.
+[3092.12s -> 3096.12s] From Bayes' rule, the last one minute,
+[3100.12s -> 3104.12s] Bayes' rule
+[3104.12s -> 3108.12s] gives us the chain rule
+[3112.12s -> 3116.12s] of conditional entropy
+[3122.12s -> 3126.12s] which is h
+[3126.12s -> 3130.12s] x given y is h of x
+[3130.12s -> 3134.12s] and y minus h
+[3134.12s -> 3138.12s] of y.
+[3138.12s -> 3142.12s] Why is that? Well, I can look
+[3142.12s -> 3146.12s] at, well, if I write out the definition of
+[3146.12s -> 3150.12s] the joint entropy, where did I do that?
+[3150.12s -> 3154.12s] Somewhere. I wrote down the joint entropy.
+[3154.12s -> 3158.12s] Oh, right up there. You can try and say, well,
+[3158.12s -> 3162.12s] if you subtracted this, rearrange everything, and you'll
+[3162.12s -> 3166.12s] get what we had here. Another way is to, if I add
+[3166.12s -> 3170.12s] h of y to both sides, I take this quantity,
+[3170.12s -> 3174.12s] I add the entropy of y, I rearrange to pull it in
+[3174.12s -> 3178.12s] and I'll get another term sitting on the bottom, and I'll get precisely the
+[3178.12s -> 3182.12s] joint entropy as I needed. So, I'll get
+[3182.12s -> 3186.12s] this. So, this is an easy enough calculation to do. It's just Bayes' rule
+[3186.12s -> 3190.12s] to go through and calculate it. That's all we've got time for today.
+[3190.12s -> 3194.12s] I will see you again tomorrow, where we will continue with
+[3194.12s -> 3198.12s] the conditional information, the conditional divergence,
+[3198.12s -> 3202.12s] and then we'll prove some of the key properties of
+[3202.12s -> 3206.12s] these different
+[3206.12s -> 3210.12s] objects. Okay, see you tomorrow!
