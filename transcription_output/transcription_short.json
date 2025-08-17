@@ -1,0 +1,237 @@
+{
+  "metadata": {
+    "file": "your_audio.mp3",
+    "file_path": "audio_transcription/your_audio.mp3",
+    "file_size_bytes": 28280856,
+    "model": "medium",
+    "device": "cuda",
+    "compute_type": "int8",
+    "cpu_threads": 0,
+    "num_workers": 1,
+    "language": "en",
+    "language_probability": 0.998047,
+    "duration_seconds": 3225.252,
+    "_audio_features": [
+      [
+        "en",
+        0.998046875
+      ],
+      [
+        "fr",
+        0.00023376941680908203
+      ]
+    ],
+    "processing_time_seconds": 162.412,
+    "processing_speed": 19.86,
+    "timestamp": "2025-08-15 19:45:06",
+    "vad_enabled": true,
+    "vad_parameters": {
+      "threshold": 0.5,
+      "min_speech_duration_ms": 250,
+      "min_silence_duration_ms": 2000
+    }
+  },
+  "parameters": {
+    "language": null,
+    "task": "transcribe",
+    "beam_size": 5,
+    "best_of": 5,
+    "patience": 1.0,
+    "temperature": [
+      0.0,
+      0.2,
+      0.4,
+      0.6,
+      0.8,
+      1.0
+    ],
+    "length_penalty": 1.0,
+    "repetition_penalty": 1.0,
+    "no_repeat_ngram_size": 0,
+    "compression_ratio_threshold": 2.4,
+    "log_prob_threshold": -1.0,
+    "no_speech_threshold": 0.6,
+    "condition_on_previous_text": true,
+    "prompt_reset_on_temperature": 0.5,
+    "initial_prompt": null,
+    "prefix": null,
+    "suppress_blank": true,
+    "suppress_tokens": [
+      -1
+    ],
+    "without_timestamps": false,
+    "max_initial_timestamp": 1.0,
+    "word_timestamps": false,
+    "prepend_punctuations": "\"'¿([{-",
+    "append_punctuations": "\"'.。,!?:)]}",
+    "vad_filter": true,
+    "vad_parameters": {
+      "threshold": 0.5,
+      "min_speech_duration_ms": 250,
+      "min_silence_duration_ms": 2000
+    },
+    "max_new_tokens": null,
+    "chunk_length": 30,
+    "clip_timestamps": [
+      0.0
+    ],
+    "hallucination_silence_threshold": null
+  },
+  "transcription": {
+    "full_text": "Hello everyone, welcome to Monday of week one. This course is information theory B 8.4. I'm Sam Cohen, you'll be seeing a lot of me. Okay, information theory, what's this course about? We are going to try and understand mathematically what happens in communication. We're going to be asking three questions as the course goes on. The first is, how can we describe the amount of information we get from a signal? How do we quantify that in a useful way? That's going to be the first couple of lectures while we get all of that going and build some of the groundwork for notation and terminology. Then we're going to move on to question two. Given I have some signal, some text, some message, something that I wish to store and remember, how do I do that efficiently? How can I build an efficient encoding of the data that I receive so that I can store the minimal amount and still reconstruct perfectly my original information? In this sense, coding is different to encryption. This course is not going to touch on encryption. Information is about how do I make it secret. For that, we need to do different things. Here we're talking about encoding, which is how do I represent information efficiently? The third thing we're going to do in the course then is we're going to look at how do I communicate information efficiently? In particular, how do I communicate when the medium of communication that I'm sending it along might be noisy? This is a theory that really developed in the 1940s around radio, but it is the basis of pretty much all communication technology, so we'll touch on 5G standards at points as we go along, for example. The course lecture notes are available online. Go have fun. I will update typos, et cetera, as we go through the course and I notice them, but they should be reasonably stable. It also references a couple of textbooks, which are very good. You can go and have a look at if you would like to look at that as well. I think that's all of the preamble, so let's get on with things. Okay. What we're going to be doing is we're going to be thinking about messages, data, and the key thing is they need to be not completely predictable. If you've got a perfectly predictable message, you don't need to do anything to remember it. The basic model that we have for something which isn't perfectly predictable is through probability theory. I brought in a deck of cards here because there's a few things that we need to make sure everyone is clear. First of all, I can't shuffle to save my life, but we need to be able to talk about the same things when we're talking about random variables. If you are doing the Martin Gauss through measure theory course, this will hopefully be reasonably obvious to you. In this course, we won't need a lot of measure theory. We won't need that whole formalism, but there's still things that are important for us. The first is the distinction between a random variable and its distribution. A random variable is, I've shuffled my cards, there we go, is that a heart? For everyone in this room at the moment, that is random. Nobody knows what it is. I didn't look. So it is a random variable. Is this a heart? It's a true or false question. We can argue for a long time as to whether this is really random given I'm holding a card in my hand and all we have to do is look at it. If someone placed a mirror behind me, we would know the answer. So is it random? It doesn't matter. We are modeling it as if it is random until right now where we notice it's the six of diamonds and all the randomness is gone. So there are some things about random variables that depend on the individual random variable. If I shuffle the deck and I do this, is this a heart? You cannot tell me no, it's the six of diamonds because we just saw the six of diamonds. This is a different random variable. So in this case, three of spades, something else. But there are properties of random variables which are known only based on their distribution, on their law. So here, things which are the same every time I shuffle the deck of cards. So here we've got, if I do this, I can shuffle them. I can take these two cards. I can ask you, what's the probability this is a heart? What's the probability this is a heart? And you'll probably tell me if I've removed the jokers, it's one in four for each of them. OK, that statement, one in four, is a statement about the distribution, the law of the random variable. It is not a statement about exactly what is written on this card. So it only depends on the randomness, on the law. It doesn't depend on the actual outcome of the cards. Now the law of a random variable tells us a lot. OK, in fact, it's a quarter. But it doesn't tell us the fact that these two things are correlated. So these are different random variables, but they are related. So the fact I've now shown you that that is the five of spades, tells you this card is slightly less likely to be a spade and slightly more likely to be a heart than what I had before. And in fact, oh, six of diamonds. Anyway, enough card tricks or really bad card tricks. We just need some notation. So in this course, we are going to predominantly focus on random variables taking finitely many outcomes. By finitely many outcomes, this means that we can get around a lot of technical problems and we can just say the law of a random variable or the law or distribution of a random variable is described by... It's probability mass function. Which we're going to denote little p. And little p is a function that takes a set of outcomes x. These are the possible values that it can take. And maps them to zero to one. And we're going to allow zero and one as probabilities throughout this course. It makes our lives a lot simpler. OK, so I'm not going to fuss too much about the details, as I said, of measure theory, about the world of what are the outcomes, what are the events, what's the map from... If you go through a measure theoretic formulation, you talk about a random variable, which is a map from the outcomes in the world to the real numbers. Here, we're just going to say my random variable takes values in some set x and I have a probability mass function p, which gives me the probabilities of each outcome. So we should say that the probability x equals little x. So this is the probability that x equals little x is just p of x. There we are. OK, we can write this in various ways. We can also write px for the distribution on R induced by x. What do I mean by this? Well, px is... So px of a set AB is equal to the probability that x is in AB. OK, so this is now a law. So it's a map on intervals or more generally on sets or subsets of R. But we can also consider the cumulative distribution function, which I'm sure you've all seen, or CDF, which is often written f of x of y is the probability that x is less than or equal to y. OK, now for univariate random variables, these are all equivalent. OK, as long as we take finitely many outcomes, knowing the probability mass function tells us the law, tells us the CDF. They're all the same thing. Of course, there are some things that are a bit more interesting, a bit richer, and a lot of this course is going to be about looking at what happens when I have multiple random variables happening at the same time, or at least sequentially. OK, so everyone happy with the terminology before I get going? Because we're just going to use this. I'm not going to come back to it. If there's questions, please heckle. It's far more fun to be heckled. OK, so basic definitions. So what we need to do is we need to define the amount of randomness in the system. OK, so when I shuffle a deck of cards and deal out a card, you sort of know something about how random that process is. And you can tell me that it feels like that's more random than if I flip a coin and there's two outcomes. The fact I've got two outcomes that are equally likely, that seems less random than having 52 outcomes, which are all random. Having 52 outcomes, which are all equally likely. So we want to try and quantify this carefully. So this was the work of this guy in this book, Claude Shannon. Not really in this book. It's the second half of this book, which was a series of papers he wrote in the 1940s, which developed the area of information theory. So what he did is he defined what he called entropy. Now, the term entropy has an interesting history. It goes back to at least the Boltzmann and the basics of statistical physics, statistical mechanics. It's a made up word. It comes from entropy, meaning in changing, just like energy is in work. And again, again, again, whichever. I don't actually speak Greek. But so Clausius, we think, made up the term to describe something a bit similar to randomness. And then Shannon took the term, used it on the suggestion of von Neumann, who said, you should call this thing you're defining entropy, because nobody knows what it is. Anyway, so we're going to try and define entropy. Entropy, entropy, how to do this. So there's a few ways of motivating this. One is to say, well, let's begin by thinking about a function which should measure how surprised we are when something happens. So we want a function. We want a function s, which should take events to the reals to describe our surprise, whatever that means. OK, so what we might think is, so we're going to take an event is x is in some set. How surprised should we be when we observe x is in some set? We propose some axioms. So one, the surprise associated with an event A depends continuously on the probability that x is in the set A. There's a statement, I'm just saying continuity, turns out to be quite critical at a technical level. But feels fairly innocuous as a statement. Two, the surprise of something is decreasing in the probability of the event. So if something's more likely, it's less surprising. OK, so we're going to take an event, and we're going to take an event, and we're going to take an event, and we're going to take an event. And three, if I give you the surprise of A and B happening, this should be, well, if the two events A and B are independent, I should just add the surprise. So s of A plus s of B if A and B are independent. Now, the interesting thing is this linearity requirement tells us a lot about the function. In fact, this can really only be satisfied by a very particular set of functions. And once we add that it's continuous, this defines everything. So the only function satisfying this assumption is s of A is equal to minus log of the probability x is in A. So that's the only function that satisfies it. This is ultimately a result due to Cauchy. If you go and you Google Cauchy's functional equation, you will find the proof that effectively gives you this, that you get this log term. The log comes out, you have to think of this as a function of log probabilities. If you write it as a function of log probabilities, then it's Cauchy's functional equation. OK, so that tells us how surprising an event is, but we're not interested just in an event. We're interested in a random variable, and random variables can be associated with multiple outcomes. So instead of thinking about the surprise of one event, let's think about the average surprise. So we can now get our definition of entropy. OK, the entropy hBx in base B of a random variable x is hB of x is equal to minus the sum over all the possible outcomes of x equals x. So the probability of the outcome times the log to base B of the probability of the outcome. So you can see that this is somehow the average of my earlier surprise function. So the average surprise is the entropy. Now there's a few things here. We said that the probability could be zero. Log of zero is not a nice thing to compute, but at least it's multiplied by the probability again. We know that x log x gets very close to zero as we approach zero, so we just define it to be zero. Where zero log zero is zero by definition. We also, so the base here, we can choose whatever base we like. That's completely up to us. By convention we're going to normally be working in base two because we're dealing with binary signals. OK, by convention we use B equals two. And so in this course, if I write log, I always mean to base two. Yes. Yes, it's finite. So we're always going to be working on finite sets. If this was not finite, then we would have to do something a little bit more clever. And in fact, this definition doesn't work. You can't define the entropy on a general set. You can have it as being infinite as long as it's still countable. But if it's on a continuous space, you need to make the definition a little bit differently. So what you can do is you can define the density and you integrate. So you integrate the log of the density. That's a good idea. It gives you a notion of entropy. But as soon as you've taken a density, you've taken the fact that it's a density with respect to the integration, the Lebesgue measure. And so the Lebesgue measure is coming in. I'll come back to this point. Why do we call it H? Nobody knows. I looked it up. I spent quite a bit of time trying to trace it down. We think maybe it's because this is not really an H. It's meant to be an eta, a capital Greek eta. But we really don't know. Yeah. So who knows? It's an H. Everyone uses H. OK, there's a few. This is the basic definition. We will see this in a few other ways coming out as we go through the course. OK, comments. The notation H of X. Notice I'm just dropping the B because B equals 2. So H is a little confusing as H depends on the law of X not the realized random variable. So if I give you two different random variables which have the same distribution, their entropy is the same. In this way, writing H of X is a bit like writing the expected value of X. The expected value is another thing that only depends on the law. But we write it as a function of the random variable itself just by convention. Makes life easier. So we just need to be a little bit careful. And it means that because of this we can write H of PX or H of P where this is the PMF. So we can write these and it means exactly the same thing. It's just a change of notation. Whatever makes it easiest for us in terms of emphasizing the thing we want. So that's just notation. We can also write H of X. We can write it in terms of the expected value of minus log P of X. So let me just make sure we're all clear on what this means. Here X is the random variable. P of X is the PMF evaluated at the random point X. So this is the random outcome. P is evaluated at a random outcome. I take the log of that real number, minus log, and then I take the expected value of that random variable. This is the same thing. So it's another way of writing it which is more focusing on the fact that X is a random variable. But the only thing that really matters is the law of X. So it's telling us about the law of X by evaluating an expected value. I said we use B equals 2. That's just convention. We could use E. We could use 10. We could use 256. If we use 2, this has units which are bits. If we use E, it has units which are nats. If we use 256, it has units which are bytes. But we're just going to use bits. But it means if you need to give this units, it has units of bits. Okay, so let's do an example. Okay, so I'm going to say my space X is H and T. Thinking about tossing a coin, heads and tails are the two outcomes. So the probability that X equals H is going to be little p. As you can see, I'm going to be completely confusing and keep you guessing what p refers to. But if it's ever unclear, then ask. So here little p is a number between 0 and 1. Alright, so this is a biased coin that I'm tossing. So the chances of heads are p. What's the entropy? Then the entropy of X is minus p log p plus... Sorry, I should say minus 1 minus p log 1 minus p, which if I plot it, 0, 1, this is p, this is H. You can see I can't draw to save my life. It looks symmetric and is 0 at the two extremes. And you can see that that's because if there's no randomness, there's no surprise. Everything is completely predictable, so you get 0 or 1. It's nice, it's continuous, etc., as we saw by the axioms. Now, just to make sure the notation is confusing, we sometimes write H of p in this special case, where p is a number between 0 and 1. Just to make sure we've overloaded our notation to the point of confusion. Okay, so if this case comes up often enough, it's useful to have some notation for it. In this case, we have that H of X equals H of p equals H of pX. There we are. Yeah, I'll be good. So H of p sub X is the PMF, pX, which is equal to H of pX. We choose that notation to make our lives easier as we wish. Okay, so that was a single event, but we can do something a bit more interesting. For example, if X is a two-dimensional vector of the form X1, X2. Okay, so now I've got X is now living in still a finite set, but it's a set that's arranged as a two-dimensional vector. So I've now got finitely many outcomes for X1, finitely many outcomes for X2, and I write them as a vector. So if I have this, then, so let's just specify X1 is in, I'll save myself, XI is in curly XI, for I equals 1 and 2. Then H of X, so X being the two-dimensional vector, that's the same as H of X1, X2. Just taken together, I just drop some brackets, write them as a pair. And this is equal to negative the sum of a little x1, x1, little x2 in x2 of, well, I need the probability x1, x2, x1, x2, log probability x1, x2, x1, x2. So this is the probability mass function of the pair evaluated at the two points, and I add them up over all possible points. So this is just treating this two-dimensional object as if it was a single random variable, because it is a random variable just arranged as a vector. Okay, well, this is an interesting case because we can now do some things with it. So if x1, x2 are independent, so P x1, x2, x1, x2 is equal to P x1, x1, P x2, x2. What that means is that the probability distribution, saying they're independent, says that the probability distribution factorizes into the product of the two marginal distributions. Well, if that's true, I substitute that in here. I then use that the log of a product is the sum of the logs. So I get H of x, well, skipping a couple of steps, but not all of them, and I'm not going to bother writing all the indices. So it's P x1, x2 log P of x1 minus the sum of P x1, x2, x1, x2, x2. So all I've done here to go from here to here is I've used this. Substitute it in, break up the log into two terms. So now that I have this, I notice that x2 only appears in one place. This is a sum over x1s and x2s. And when you add up over all the x2s, it's a probability distribution. So this turns into minus the sum of P x1 log P x1 over x2. So P log P x2, which you'll recognize as the entropy of x1 plus the entropy of x2. So if they're independent, then you just add the entropies together. And this is completely unsurprising because we had this assumption about our surprise. This is just the average surprise, so the property carries over directly. It also tells us that if I've got independent and identically distributed, then the joint entropy of a pair is just double the original entropy. And that's the fact we're going to use a lot. All right. So that's entropy. There's a few other related quantities that are going to prove useful for us. So one is the divergence. Okay. Write this as a definition. Definition of the divergence. Sum set P and Q be PMFs on sum set X. Two probability mass functions. We're trying to say how different the two distributions are. We say D P double bar Q. And this is equal to the sum of PX log PX over QX. Is the divergence between P and Q. Okay. With zero cross log zero. Zero times log zero equals zero. And the divergence of P and Q equals infinite. If there exists an X such that Q of X equals zero and P of X is not zero. Okay. This is the only logical way of dealing with it. So if Q is sometimes zero and P is not zero, this is infinite. Log is infinite. There you are. We've got an infinite answer. So this quantity here is sometimes called the information divergence or the Kullback-Leibler divergence or the relative entropy. This is the thing that generalizes to infinite states well. So on your question a moment ago about what happens if we go outside infinite states, finite states. If we go to infinite states, this is something which has a perfectly good definition as a way of extending the definition of entropy. This, not so much. Okay. Then I've got this P dominates it. So you've got a zero times something. So that's fine. Okay. So given X is distributed with P. So this is just a notation for saying P is the mass function for X. Okay. The divergence of P and Q can be written. Well, you look at this and you say that looks like an expected value. So I write it as the expected value of log P of X over Q of X. So this is just a random variable here and I've just got the log. So there we are. That's equal to, I can split this log into two terms. The expected value of log one over Q X. Minus the expected value of log one over P X. Which is equal to the expected value. I can write it as the minus the expected value of log Q X. Minus the entropy of X. So there's various ways to look at this. You can think of this as measuring how different P and Q are. It's always non-negative. We'll see that in a minute. So this quantity, while there's nothing immediate that says this should be non-negative, it turns out it is a non-negative quantity. It is not symmetric. And it may be infinite. And those two things mean it can't be a metric. So this is not a metric on the space of probability distributions. It's fairly close to a metric. In fact, if you look at what's called the Jensen-Shannon divergence, which is where you take D of P Q plus D of Q P, and then you take a square root, that turns into a metric. But we're not going to get into that. But it's quite useful that this is asymmetric, as we'll see in some examples. So let's ask ourselves a question. So example. So let's say X is equal to 0, 1. Tossing a coin. Well, we're going to toss a coin, but I'm not going to tell you. I've got a couple of coins I might be producing. So if I produce the P coin, the probability of getting 0 is a half. But if I produce the Q coin, the probability of 0 is 1. There we are. OK. How many coins do I need to toss to distinguish between these coins? How many times do I need to throw it? So if I toss my coin once, and I observe a tail, or one, we know which coin it was. If I toss the coin once, and we observe a zero, we think it's more likely that it was Q, maybe. There's evidence for Q. But it certainly could have been P as well. So if we are given independent samples, so if we observe, OK, so 0, 0, 0, 0, 0, 1, if I observe that sequence, we know that it was the first coin. OK. On the other hand, if I observe 0, 0, 0, 0, 0, 0, probably, and I say probably because we need to have some way of saying what we mean by probably two things, if I randomize the choice of coin, then that would be enough. So you can see that this is asymmetric. In particular, we can't exclude the possibility that we came from distribution P. We can say it's very unlikely, we think it's more likely to be Q than P, but we can't exclude it at this point. And this is reflected in the fact that, so this asymmetry is reflected in the fact that the divergence of P from Q is infinite, but the divergence of Q from P is 1. Another little example, just so we've done it, if Q is uniform, then the divergence of P from Q is 1, oh sorry, it's log of size minus h of x for x distributed like P. Okay, how do I see this? I look here, I go, oh, Q is uniform, so it's 1 over the sum, 1 of the size of my space, simplify that kills the 1 over, kills the minus sign, so there just gives me log of the size of my space minus the entropy, that's what I've written there. Okay, the last of our basic objects is the mutual information. Okay, so let x and y be discrete random variables, taking values in curly x and curly y. The mutual information is, so mutual information between x and y is I, x, y, so this is the information that x or y tells you about the other one. It's equal to the sum over x's in x over y's in y of, well, it's the joint probability times the log of the joint probability divided by the individual probabilities, the marginals. Now, I've just written this formula down, I haven't said why this should be the definition, why? Well, there's a few motivations. So, if x and y are independent, then neither of them tells you about the other. So, if the independence should mean there's no information from one about the other, that's what we intuitively mean, so if p, so if I write p, x, y, p, x, p, y are the PMFs of x, y, x and y, then well, the information x, y is equal to the divergence between p, x, y, and p, x, p, y. So, it's how far the joint distribution is from an independent distribution. So, if I have two random variables and they're independent, this is their joint distribution. But I don't have independence, I have something else. How far apart are they? Well, we're just going to measure that with the divergence. So, the information, the mutual information between x and y, measures this difference between where we are versus independence. Now, you might say that the natural way to measure how much information you get from one to the other, oh, sorry. Why do we do it in this direction? If we swap the order, if we say the divergence between p, x, p, y, and p, x, y, is that also a useful function? It can be. It's not, algebraically, it doesn't quite work out as well. What you'll find in a lot of these things is, yes, you can often swap the ordering and then you'll get something sensible, but algebraically, it's just going to prove painful. So, this is a neater way of doing it. That's all. So, you might argue, does that answer the question? I know it doesn't really answer the question apart from, this will make a, this one will spark joy. Okay? You might argue that the right way to measure information is something like correlation. You've done stats at school, you did stats a couple of last year and the year before, and you say, oh, I've learned correlation between two things, that measures how much one relates to the other. And yes, it does, but that only measures linear relationships. Okay? So, correlation, the standard Pearson correlation, measures only the linear relationships. There are others, there's Spearman's rank correlation, which measures how well they order together, etc. Here, this is just measuring any sort of relationship. It's just trying to tell us how much information is there from one to the other. We can also write, the information between X and Y is the expected value. Well, here I'm just going to do the obvious thing. This looks like an expected value, so I'm just going to write it as one. So, it's the expected value of log Pxy evaluated at the random variable x and y, divided by x at x, P y at y. So, these are now the random variables being evaluated at their probability mass function. So, I can write this. This then gives us the expected value of log Pxy xy, minus the expected value log Px at x, minus the expected value of log P y at y, which you can now look at and you say, aha, this is equal to h of x, plus h of y, minus h of x and y. So, it's saying it's the entropy of x, plus the entropy of y, minus the entropy of the pair. So, if these things are independent, the information is zero, because the joint entropy is the sum of the two original entropies. Otherwise, we'll see these two are bigger than this, and so we don't, well, we do have information. Alright, so those are the three basic quantities we're going to be using quite a lot. It's useful also for us to have conditional versions. So, we want to say, given one thing, what happens to the entropy? So, we're going to now define, so we can do conditional versions, let's do conditional entropy. Okay. So, the conditional entropy of y given x, okay, the definition feels a little bit strange. You might think, oh, it's the entropy of the conditional distribution. But that's not quite what we do. So, what we're going to say is it is, we write H of y given x, and this is minus of the double sum of x and y of the probabilities x equals y, times the log of the probability y equals y given x equals x. So, the point is, this is the average entropy that I would have after conditioning. So, it's the average how, so, how much randomness is there going to be in y on average after I've observed x? Does that sort of make sense? But it's an average quantity. That's why this is still going to be a real number. This is not going to be a random variable. Okay. We can, of course, apply Bayes' Theorem to get our hands on what this is a little bit more explicitly. And we get minus the double sum of x and y of the probability x equals x, y equals y of the log. Well, conditional distribution, this is the probability y equals y and x equals x. So, the joint distribution divided by the probability x equals x. That's just the definition of conditional probability. Okay. Hence, so, the entropy of y given x can be written. Well, we can write this in a whole lot of different ways. One would be to break this up. Let's pull out the x terms by themselves. So, we'll take it as minus the sum of probability x equals x of the sum of y probability y equals y given x equals x log of the probability y equals y given x equals x. So, now, I sort of put some brackets there and there. This is the entropy of y given x equals the little value little x. So, if I freeze x to have this little value, this is now the entropy of y conditioned on that value of x. This is averaging that quantity over all the possible values of x. Okay. And so, you can see this, well, there's various definitions. So, you could write this as minus the sum of x equals x of the entropy of y given x equals little x. This would be another way of writing it, where here, this is where notation is getting overloaded, I understand. Here, I'm freezing the actual value of x, looking at the conditional distribution, working with that, finding the entropy of this, average it out. Here, I'm looking at the object, which is the average of this thing. So, I don't freeze the individual value. From Bayes' rule, the last one minute, Bayes' rule gives us the chain rule of conditional entropy which is h x given y is h of x and y minus h of y. Why is that? Well, I can look at, well, if I write out the definition of the joint entropy, where did I do that? Somewhere. I wrote down the joint entropy. Oh, right up there. You can try and say, well, if you subtracted this, rearrange everything, and you'll get what we had here. Another way is to, if I add h of y to both sides, I take this quantity, I add the entropy of y, I rearrange to pull it in and I'll get another term sitting on the bottom, and I'll get precisely the joint entropy as I needed. So, I'll get this. So, this is an easy enough calculation to do. It's just Bayes' rule to go through and calculate it. That's all we've got time for today. I will see you again tomorrow, where we will continue with the conditional information, the conditional divergence, and then we'll prove some of the key properties of these different objects. Okay, see you tomorrow!",
+    "word_count": 6116,
+    "segment_count": 630,
+    "character_count": 31482,
+    "average_segment_duration": 4.896,
+    "word_level_timestamps_available": false
+  },
+  "segments": [
+    {
+      "id": 0,
+      "seek": 0,
+      "start": 0.0,
+      "end": 15.84,
+      "duration": 15.84,
+      "text": "Hello everyone, welcome to Monday of week one.",
+      "tokens": [
+        50364,
+        2425,
+        1518,
+        11,
+        2928,
+        281,
+        8138,
+        295,
+        1243,
+        472,
+        13,
+        51156
+      ],
+      "temperature": 0.0,
+      "avg_logprob": -0.276278,
+      "compression_ratio": 1.314,
+      "no_speech_prob": 0.045959
+    },
+    {
+      "id": 1,
+      "seek": 0,
+      "start": 15.84,
+      "end": 20.98,
+      "duration": 5.14,
+      "text": "This course is information theory B 8.4.",
+      "tokens": [
+        51156,
+        639,
+        1164,
+        307,
+        1589,
+        5261,
+        363,
+        1649,
+        13,
+        19,
+        13,
+        51413
+      ],
+      "temperature": 0.0,
+      "avg_logprob": -0.276278,
+      "compression_ratio": 1.314,
+      "no_speech_prob": 0.045959
+    },
+    {
+      "id": 2,
+      "seek": 0,
+      "start": 20.98,
+      "end": 24.0,
+      "duration": 3.02,
+      "text": "I'm Sam Cohen, you'll be seeing a lot of me.",
+      "tokens": [
+        51413,
+        286,
+        478,
+        4832,
+        32968,
+        11,
+        291,
+        603,
+        312,
+        2577,
+        257,
+        688,
+        295,
+        385,
+        13,
+        51564
+      ],
+      "temperature": 0.0,
+      "avg_logprob": -0.276278,
+      "compression_ratio": 1.314,
+      "no_speech_prob": 0.045959
+    },
+    {
+      "id": 3,
+      "seek": 0,
+      "start": 24.0,
+      "end": 26.82,
+      "duration": 2.82,
+      "text": "Okay, information theory, what's this course about?",
+      "tokens": [
+        51564,
+        1033,
+        11,
+        1589,
+        5261,
+        11,
+        437,
+        311,
+        341,
+        1164,
+        466,
+        30,
+        51705
+      ],
+      "temperature": 0.0,
+      "avg_logprob": -0.276278,
+      "compression_ratio": 1.314,
+      "no_speech_prob": 0.045959
+    },
+    {
+      "id": 4,
+      "seek": 2682,
+      "start": 26.82,
+      "end": 31.9,
+      "duration": 5.08,
+      "text": "We are going to try and understand mathematically what happens in communication.",
+      "tokens": [
+        50364,
+        492,
+        366,
+        516,
+        281,
+        853,
+        293,
+        1223,
+        44003,
+        437,
+        2314,
+        294,
+        6101,
+        13,
+        50618
+      ],
+      "temperature": 0.0,
+      "avg_logprob": -0.104672,
+      "compression_ratio": 1.643,
+      "no_speech_prob": 0.326904
+    }
+  ],
+  "words": null,
+  "statistics": {
+    "total_segments": 630,
+    "total_words": null,
+    "average_words_per_segment": null,
+    "speech_rate_wpm": null,
+    "silence_detected": false,
+    "average_confidence": -0.133501
+  }
+}

@@ -1,3 +1,14 @@
+============================================================
+TRANSCRIPTION METADATA
+============================================================
+File: your_audio.mp3
+Duration: 53:45
+Language: en
+Word Count: 6116
+Processing Date: 2025-08-15 19:45:06
+============================================================
+
+[00:00 - 01:30]
 Hello everyone, welcome to Monday of week one.
 This course is information theory B 8.4.
 I'm Sam Cohen, you'll be seeing a lot of me.
@@ -15,6 +26,8 @@ This course is not going to touch on encryption.
 Information is about how do I make it secret.
 For that, we need to do different things.
 Here we're talking about encoding, which is how do I represent information efficiently?
+
+[01:30 - 02:58]
 The third thing we're going to do in the course then is we're going to look at how do I communicate information efficiently?
 In particular, how do I communicate when the medium of communication that I'm sending it along might be noisy?
 This is a theory that really developed in the 1940s around radio, but it is the basis of pretty much all communication technology, so we'll touch on 5G standards at points as we go along, for example.
@@ -29,6 +42,8 @@ What we're going to be doing is we're going to be thinking about messages, data,
 If you've got a perfectly predictable message, you don't need to do anything to remember it.
 The basic model that we have for something which isn't perfectly predictable is through probability theory.
 I brought in a deck of cards here because there's a few things that we need to make sure everyone is clear.
+
+[02:58 - 04:09]
 First of all, I can't shuffle to save my life, but we need to be able to talk about the same things when we're talking about random variables.
 If you are doing the Martin Gauss through measure theory course, this will hopefully be reasonably obvious to you.
 In this course, we won't need a lot of measure theory.
@@ -46,6 +61,8 @@ If someone placed a mirror behind me, we would know the answer.
 So is it random?
 It doesn't matter.
 We are modeling it as if it is random until right now where we notice it's the six of diamonds and all the randomness is gone.
+
+[04:09 - 05:18]
 So there are some things about random variables that depend on the individual random variable.
 If I shuffle the deck and I do this, is this a heart?
 You cannot tell me no, it's the six of diamonds because we just saw the six of diamonds.
@@ -62,6 +79,8 @@ OK, that statement, one in four, is a statement about the distribution, the law 
 It is not a statement about exactly what is written on this card.
 So it only depends on the randomness, on the law.
 It doesn't depend on the actual outcome of the cards.
+
+[05:18 - 06:08]
 Now the law of a random variable tells us a lot.
 OK, in fact, it's a quarter.
 But it doesn't tell us the fact that these two things are correlated.
@@ -72,6 +91,8 @@ Anyway, enough card tricks or really bad card tricks.
 We just need some notation.
 So in this course, we are going to predominantly focus on random variables taking finitely many outcomes.
 By finitely many outcomes, this means that we can get around a lot of technical problems and we can just say the law of a random variable or the law or distribution of a random variable is described by...
+
+[06:30 - 08:18]
 It's probability mass function.
 Which we're going to denote little p.
 And little p is a function that takes a set of outcomes x.
@@ -88,6 +109,8 @@ There we are.
 OK, we can write this in various ways.
 We can also write px for the distribution on R induced by x.
 What do I mean by this?
+
+[08:18 - 09:48]
 Well, px is...
 So px of a set AB is equal to the probability that x is in AB.
 OK, so this is now a law.
@@ -97,6 +120,8 @@ OK, now for univariate random variables, these are all equivalent.
 OK, as long as we take finitely many outcomes, knowing the probability mass function tells us the law, tells us the CDF.
 They're all the same thing.
 Of course, there are some things that are a bit more interesting, a bit richer, and a lot of this course is going to be about looking at what happens when I have multiple random variables happening at the same time, or at least sequentially.
+
+[09:51 - 11:08]
 OK, so everyone happy with the terminology before I get going?
 Because we're just going to use this.
 I'm not going to come back to it.
@@ -113,6 +138,8 @@ So this was the work of this guy in this book, Claude Shannon.
 Not really in this book.
 It's the second half of this book, which was a series of papers he wrote in the 1940s, which developed the area of information theory.
 So what he did is he defined what he called entropy.
+
+[11:08 - 13:09]
 Now, the term entropy has an interesting history.
 It goes back to at least the Boltzmann and the basics of statistical physics, statistical mechanics.
 It's a made up word.
@@ -130,6 +157,8 @@ We want a function s, which should take events to the reals to describe our surp
 OK, so what we might think is, so we're going to take an event is x is in some set.
 How surprised should we be when we observe x is in some set?
 We propose some axioms.
+
+[13:09 - 14:27]
 So one, the surprise associated with an event A depends continuously on the probability that x is in the set A.
 There's a statement, I'm just saying continuity, turns out to be quite critical at a technical level.
 But feels fairly innocuous as a statement.
@@ -138,6 +167,8 @@ So if something's more likely, it's less surprising.
 OK, so we're going to take an event, and we're going to take an event, and we're going to take an event, and we're going to take an event.
 And three, if I give you the surprise of A and B happening, this should be, well, if the two events A and B are independent, I should just add the surprise.
 So s of A plus s of B if A and B are independent.
+
+[14:31 - 16:03]
 Now, the interesting thing is this linearity requirement tells us a lot about the function.
 In fact, this can really only be satisfied by a very particular set of functions.
 And once we add that it's continuous, this defines everything.
@@ -150,6 +181,8 @@ If you write it as a function of log probabilities, then it's Cauchy's functiona
 OK, so that tells us how surprising an event is, but we're not interested just in an event.
 We're interested in a random variable, and random variables can be associated with multiple outcomes.
 So instead of thinking about the surprise of one event, let's think about the average surprise.
+
+[16:04 - 17:29]
 So we can now get our definition of entropy.
 OK, the entropy hBx in base B of a random variable x is hB of x is equal to minus the sum over all the possible outcomes of x equals x.
 So the probability of the outcome times the log to base B of the probability of the outcome.
@@ -159,6 +192,8 @@ Now there's a few things here.
 We said that the probability could be zero.
 Log of zero is not a nice thing to compute, but at least it's multiplied by the probability again.
 We know that x log x gets very close to zero as we approach zero, so we just define it to be zero.
+
+[17:30 - 18:42]
 Where zero log zero is zero by definition.
 We also, so the base here, we can choose whatever base we like.
 That's completely up to us.
@@ -173,6 +208,8 @@ And in fact, this definition doesn't work.
 You can't define the entropy on a general set.
 You can have it as being infinite as long as it's still countable.
 But if it's on a continuous space, you need to make the definition a little bit differently.
+
+[18:45 - 19:51]
 So what you can do is you can define the density and you integrate.
 So you integrate the log of the density.
 That's a good idea.
@@ -195,6 +232,8 @@ OK, there's a few.
 This is the basic definition.
 We will see this in a few other ways coming out as we go through the course.
 OK, comments.
+
+[19:57 - 22:16]
 The notation H of X.
 Notice I'm just dropping the B because B equals 2.
 So H is a little confusing as H depends on the law of X not the realized random variable.
@@ -214,6 +253,8 @@ We can write it in terms of the expected value of minus log P of X.
 So let me just make sure we're all clear on what this means.
 Here X is the random variable.
 P of X is the PMF evaluated at the random point X.
+
+[22:16 - 23:49]
 So this is the random outcome.
 P is evaluated at a random outcome.
 I take the log of that real number, minus log, and then I take the expected value of that random variable.
@@ -237,6 +278,8 @@ Thinking about tossing a coin, heads and tails are the two outcomes.
 So the probability that X equals H is going to be little p.
 As you can see, I'm going to be completely confusing and keep you guessing what p refers to.
 But if it's ever unclear, then ask.
+
+[23:49 - 25:58]
 So here little p is a number between 0 and 1.
 Alright, so this is a biased coin that I'm tossing.
 So the chances of heads are p.
@@ -256,6 +299,8 @@ There we are.
 Yeah, I'll be good.
 So H of p sub X is the PMF, pX, which is equal to H of pX.
 We choose that notation to make our lives easier as we wish.
+
+[25:58 - 27:54]
 Okay, so that was a single event, but we can do something a bit more interesting.
 For example, if X is a two-dimensional vector of the form X1, X2.
 Okay, so now I've got X is now living in still a finite set, but it's a set that's arranged as a two-dimensional vector.
@@ -266,6 +311,8 @@ Just taken together, I just drop some brackets, write them as a pair.
 And this is equal to negative the sum of a little x1, x1, little x2 in x2 of, well, I need the probability x1, x2, x1, x2, log probability x1, x2, x1, x2.
 So this is the probability mass function of the pair evaluated at the two points, and I add them up over all possible points.
 So this is just treating this two-dimensional object as if it was a single random variable, because it is a random variable just arranged as a vector.
+
+[27:54 - 29:54]
 Okay, well, this is an interesting case because we can now do some things with it.
 So if x1, x2 are independent, so P x1, x2, x1, x2 is equal to P x1, x1, P x2, x2.
 What that means is that the probability distribution, saying they're independent, says that the probability distribution factorizes into the product of the two marginal distributions.
@@ -279,6 +326,8 @@ So now that I have this, I notice that x2 only appears in one place.
 This is a sum over x1s and x2s.
 And when you add up over all the x2s, it's a probability distribution.
 So this turns into minus the sum of P x1 log P x1 over x2.
+
+[29:55 - 32:13]
 So P log P x2, which you'll recognize as the entropy of x1 plus the entropy of x2.
 So if they're independent, then you just add the entropies together.
 And this is completely unsurprising because we had this assumption about our surprise.
@@ -302,6 +351,8 @@ Okay.
 With zero cross log zero.
 Zero times log zero equals zero.
 And the divergence of P and Q equals infinite.
+
+[32:14 - 34:00]
 If there exists an X such that Q of X equals zero and P of X is not zero.
 Okay.
 This is the only logical way of dealing with it.
@@ -324,6 +375,8 @@ So this is just a notation for saying P is the mass function for X.
 Okay.
 The divergence of P and Q can be written.
 Well, you look at this and you say that looks like an expected value.
+
+[34:00 - 35:29]
 So I write it as the expected value of log P of X over Q of X.
 So this is just a random variable here and I've just got the log.
 So there we are.
@@ -343,6 +396,8 @@ And it may be infinite.
 And those two things mean it can't be a metric.
 So this is not a metric on the space of probability distributions.
 It's fairly close to a metric.
+
+[35:30 - 37:09]
 In fact, if you look at what's called the Jensen-Shannon divergence, which is where you take D of P Q plus D of Q P, and then you take a square root, that turns into a metric.
 But we're not going to get into that.
 But it's quite useful that this is asymmetric, as we'll see in some examples.
@@ -362,13 +417,18 @@ So if I toss my coin once, and I observe a tail, or one, we know which coin it w
 If I toss the coin once, and we observe a zero, we think it's more likely that it was Q, maybe.
 There's evidence for Q.
 But it certainly could have been P as well.
-So if we are given independent samples, so if we observe, OK, so 0, 0, 0, 0, 0, 1, if I observe that sequence, we know that it was the first coin.
+So if we are given independent samples,
+
+[37:09 - 38:45]
+So if we observe, OK, so 0, 0, 0, 0, 0, 1, if I observe that sequence, we know that it was the first coin.
 OK.
 On the other hand, if I observe 0, 0, 0, 0, 0, 0, probably, and I say probably because we need to have some way of saying what we mean by probably two things, if I randomize the choice of coin, then that would be enough.
 So you can see that this is asymmetric.
 In particular, we can't exclude the possibility that we came from distribution P.
 We can say it's very unlikely, we think it's more likely to be Q than P, but we can't exclude it at this point.
 And this is reflected in the fact that, so this asymmetry is reflected in the fact that the divergence of P from Q is infinite, but the divergence of Q from P is 1.
+
+[38:55 - 41:44]
 Another little example, just so we've done it, if Q is uniform, then the divergence of P from Q is 1, oh sorry, it's log of size minus h of x for x distributed like P.
 Okay, how do I see this?
 I look here, I go, oh, Q is uniform, so it's 1 over the sum, 1 of the size of my space, simplify that kills the 1 over, kills the minus sign, so there just gives me log of the size of my space minus the entropy, that's what I've written there.
@@ -377,6 +437,8 @@ Okay, so let x and y be discrete random variables, taking values in curly x and 
 The mutual information is, so mutual information between x and y is I, x, y, so this is the information that x or y tells you about the other one.
 It's equal to the sum over x's in x over y's in y of, well, it's the joint probability times the log of the joint probability divided by the individual probabilities, the marginals.
 Now, I've just written this formula down, I haven't said why this should be the definition, why?
+
+[41:44 - 43:34]
 Well, there's a few motivations.
 So, if x and y are independent, then neither of them tells you about the other.
 So, if the independence should mean there's no information from one about the other, that's what we intuitively mean, so if p, so if I write p, x, y, p, x, p, y are the PMFs of x, y, x and y, then well, the information x, y is equal to the divergence between p, x, y, and p, x, p, y.
@@ -388,7 +450,10 @@ Well, we're just going to measure that with the divergence.
 So, the information, the mutual information between x and y, measures this difference between where we are versus independence.
 Now, you might say that the natural way to measure how much information you get from one to the other, oh, sorry.
 Why do we do it in this direction?
-If we swap the order, if we say the divergence between p, x, p, y, and p, x, y, is that also a useful function?
+If we swap the order, if we say the divergence between p, x, p, y, and p, x, y,
+
+[43:34 - 44:44]
+Is that also a useful function?
 It can be.
 It's not, algebraically, it doesn't quite work out as well.
 What you'll find in a lot of these things is, yes, you can often swap the ordering and then you'll get something sensible, but algebraically, it's just going to prove painful.
@@ -402,7 +467,10 @@ You've done stats at school, you did stats a couple of last year and the year be
 And yes, it does, but that only measures linear relationships.
 Okay?
 So, correlation, the standard Pearson correlation, measures only the linear relationships.
-There are others, there's Spearman's rank correlation, which measures how well they order together, etc.
+There are others, there's Spearman's rank correlation, which measures how well they order together,
+
+[44:44 - 46:46]
+Etc.
 Here, this is just measuring any sort of relationship.
 It's just trying to tell us how much information is there from one to the other.
 We can also write, the information between X and Y is the expected value.
@@ -414,7 +482,10 @@ So, I can write this.
 This then gives us the expected value of log Pxy xy, minus the expected value log Px at x, minus the expected value of log P y at y, which you can now look at and you say, aha, this is equal to h of x, plus h of y, minus h of x and y.
 So, it's saying it's the entropy of x, plus the entropy of y, minus the entropy of the pair.
 So, if these things are independent, the information is zero, because the joint entropy is the sum of the two original entropies.
-Otherwise, we'll see these two are bigger than this, and so we don't, well, we do have information.
+Otherwise, we'll see these two are bigger than this,
+
+[46:46 - 48:48]
+And so we don't, well, we do have information.
 Alright, so those are the three basic quantities we're going to be using quite a lot.
 It's useful also for us to have conditional versions.
 So, we want to say, given one thing, what happens to the entropy?
@@ -430,6 +501,8 @@ Does that sort of make sense?
 But it's an average quantity.
 That's why this is still going to be a real number.
 This is not going to be a random variable.
+
+[48:48 - 50:40]
 Okay.
 We can, of course, apply Bayes' Theorem to get our hands on what this is a little bit more explicitly.
 And we get minus the double sum of x and y of the probability x equals x, y equals y of the log.
@@ -446,6 +519,8 @@ So, now, I sort of put some brackets there and there.
 This is the entropy of y given x equals the little value little x.
 So, if I freeze x to have this little value, this is now the entropy of y conditioned on that value of x.
 This is averaging that quantity over all the possible values of x.
+
+[50:40 - 51:36]
 Okay.
 And so, you can see this, well, there's various definitions.
 So, you could write this as minus the sum of x equals x of the entropy of y given x equals little x.
@@ -453,7 +528,10 @@ This would be another way of writing it, where here, this is where notation is g
 Here, I'm freezing the actual value of x, looking at the conditional distribution, working with that, finding the entropy of this, average it out.
 Here, I'm looking at the object, which is the average of this thing.
 So, I don't freeze the individual value.
-From Bayes' rule, the last one minute, Bayes' rule gives us the chain rule of conditional entropy which is h x given y is h of x and y minus h of y.
+From Bayes' rule, the last one minute,
+
+[51:40 - 53:30]
+Bayes' rule gives us the chain rule of conditional entropy which is h x given y is h of x and y minus h of y.
 Why is that?
 Well, I can look at, well, if I write out the definition of the joint entropy, where did I do that?
 Somewhere.
