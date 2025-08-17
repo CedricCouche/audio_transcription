@@ -217,7 +217,7 @@ def main():
     
     # Load JSON file
     try:
-        with open('your_audio_advanced_transcription.json', 'r', encoding='utf-8') as file:
+        with open('data/audio_transcription.json', 'r', encoding='utf-8') as file:
             json_data = json.load(file)
         
         # Format the transcription
@@ -228,7 +228,7 @@ def main():
         )
         
         # Save to file
-        output_filename = 'formatted_transcription.txt'
+        output_filename = 'data/formatted_transcription.txt'
         with open(output_filename, 'w', encoding='utf-8') as file:
             file.write(formatted_text)
         

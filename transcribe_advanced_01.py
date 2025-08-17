@@ -259,7 +259,7 @@ def transcribe_advanced(audio_path, **kwargs):
     
     return json_data
 
-def save_json(data, audio_path, suffix="_advanced_transcription"):
+def save_json(data, audio_path, suffix="_transcription"):
     """Save transcription data to JSON file"""
     if not data:
         return None
@@ -374,7 +374,7 @@ if __name__ == "__main__":
         print("Transcription failed.")
 
 # Example usage:
-# Basic : python advanced_transcribe.py Audio_01.mp3
-# High-quality with word timestamps : python advanced_transcribe.py Audio_01.mp3 --model large-v3 --word-timestamps --beam-size 10
-# Fast processing: python advanced_transcribe.py Audio_01.mp3 --model small --beam-size 1 --no-vad
-# French with custom prompt: python advanced_transcribe.py Audio_01.mp3 --language fr --initial-prompt "This is a technical lecture about"
+# Basic : python transcribe_advanced_01.py data/audio.mp3
+# High-quality with word timestamps : python transcribe_advanced_01.py data/audio.mp3 --model large-v3 --word-timestamps --beam-size 10
+# Fast processing: python transcribe_advanced_01.py data/audio.mp3 --model small --beam-size 1 --no-vad
+# French with custom prompt: python transcribe_advanced_01.py data/audio.mp3 --language fr --initial-prompt "This is a technical lecture about"
