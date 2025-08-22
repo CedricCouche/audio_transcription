@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Advanced audio transcription using faster-whisper with all configurable parameters
+Advanced audio transcription using faster-whisper with JSON configuration
 Output: JSON file with segments and metadata
 """
 
@@ -10,6 +10,28 @@ import sys
 import os
 import time
 import argparse
+
+def load_config(config_path):
+    """
+    Load configuration from JSON file
+    
+    Args:
+        config_path (str): Path to JSON configuration file
+    
+    Returns:
+        dict: Configuration dictionary
+    """
+    try:
+        with open(config_path, 'r', encoding='utf-8') as f:
+            config = json.load(f)
+        print(f"✓ Configuration loaded from: {config_path}")
+        return config
+    except FileNotFoundError:
+        print(f"Error: Configuration file '{config_path}' not found.")
+        return None
+    except json.JSONDecodeError as e:
+        print(f"Error: Invalid JSON in configuration file: {e}")
+        return None
 
 def transcribe_advanced(audio_path, **kwargs):
     """
@@ -277,45 +299,12 @@ def save_json(data, audio_path, suffix="_transcription"):
     return json_path
 
 def setup_argparse():
-    """Setup command line argument parser"""
-    parser = argparse.ArgumentParser(description="Advanced Whisper transcription with all parameters")
+    """Setup command line argument parser - only audio file and config file"""
+    parser = argparse.ArgumentParser(description="Advanced Whisper transcription with JSON configuration")
     
-    # Required argument
+    # Only two required arguments
     parser.add_argument("audio_file", help="Path to audio file")
-    
-    # Model parameters
-    parser.add_argument("--model", default="medium", choices=["tiny", "base", "small", "medium", "large-v2", "large-v3"], help="Model size")
-    parser.add_argument("--device", default="cuda", choices=["cpu", "cuda", "auto"], help="Device to use")
-    parser.add_argument("--compute-type", default="int8", choices=["int8", "float16", "float32"], help="Compute precision")
-    parser.add_argument("--cpu-threads", type=int, default=0, help="Number of CPU threads (0 = all)")
-    
-    # Transcription parameters
-    parser.add_argument("--language", help="Force language (e.g., 'en', 'fr', 'es')")
-    parser.add_argument("--task", default="transcribe", choices=["transcribe", "translate"], help="Task type")
-    parser.add_argument("--beam-size", type=int, default=5, help="Beam size for beam search")
-    parser.add_argument("--best-of", type=int, default=5, help="Number of candidates for best-of search")
-    parser.add_argument("--patience", type=float, default=1.0, help="Patience for beam search")
-    parser.add_argument("--length-penalty", type=float, default=1.0, help="Length penalty")
-    parser.add_argument("--repetition-penalty", type=float, default=1.0, help="Repetition penalty")
-    parser.add_argument("--compression-ratio-threshold", type=float, default=2.4, help="Compression ratio threshold")
-    parser.add_argument("--log-prob-threshold", type=float, default=-1.0, help="Log probability threshold")
-    parser.add_argument("--no-speech-threshold", type=float, default=0.6, help="No speech probability threshold")
-    
-    # Timestamp parameters
-    parser.add_argument("--word-timestamps", action="store_true", help="Extract word-level timestamps")
-    parser.add_argument("--without-timestamps", action="store_true", help="Disable timestamps")
-    parser.add_argument("--max-initial-timestamp", type=float, default=1.0, help="Maximum initial timestamp")
-    
-    # VAD parameters
-    parser.add_argument("--no-vad", action="store_true", help="Disable voice activity detection")
-    parser.add_argument("--vad-threshold", type=float, default=0.5, help="VAD threshold")
-    parser.add_argument("--min-speech-duration", type=int, default=250, help="Minimum speech duration (ms)")
-    parser.add_argument("--min-silence-duration", type=int, default=2000, help="Minimum silence duration (ms)")
-    
-    # Other parameters
-    parser.add_argument("--initial-prompt", help="Initial prompt to guide transcription")
-    parser.add_argument("--chunk-length", type=int, default=30, help="Chunk length in seconds")
-    parser.add_argument("--condition-on-previous-text", action="store_false", help="Disable conditioning on previous text")
+    parser.add_argument("--config", "-c", required=True, help="Path to JSON configuration file")
     
     return parser
 
@@ -323,43 +312,27 @@ if __name__ == "__main__":
     parser = setup_argparse()
     args = parser.parse_args()
     
-    print("=== Advanced Whisper Transcription ===")
+    print("=== Advanced Whisper Transcription with JSON Config ===")
     print(f"Audio file: {args.audio_file}")
-    print(f"Model: {args.model}")
-    print(f"Device: {args.device}")
+    print(f"Config file: {args.config}")
     
-    # Build parameters dictionary
-    params = {
-        'model_size': args.model,
-        'device': args.device,
-        'compute_type': args.compute_type,
-        'cpu_threads': args.cpu_threads,
-        'language': args.language,
-        'task': args.task,
-        'beam_size': args.beam_size,
-        'best_of': args.best_of,
-        'patience': args.patience,
-        'length_penalty': args.length_penalty,
-        'repetition_penalty': args.repetition_penalty,
-        'compression_ratio_threshold': args.compression_ratio_threshold,
-        'log_prob_threshold': args.log_prob_threshold,
-        'no_speech_threshold': args.no_speech_threshold,
-        'word_timestamps': args.word_timestamps,
-        'without_timestamps': args.without_timestamps,
-        'max_initial_timestamp': args.max_initial_timestamp,
-        'vad_filter': not args.no_vad,
-        'initial_prompt': args.initial_prompt,
-        'chunk_length': args.chunk_length,
-        'condition_on_previous_text': args.condition_on_previous_text,
-        'vad_parameters': {
-            'threshold': args.vad_threshold,
-            'min_speech_duration_ms': args.min_speech_duration,
-            'min_silence_duration_ms': args.min_silence_duration
-        } if not args.no_vad else {}
-    }
+    # Load configuration
+    config = load_config(args.config)
+    if not config:
+        sys.exit(1)
+    
+    # Use configuration as-is (no command line overrides)
+    final_params = config
+    
+    print(f"\n✓ Configuration loaded:")
+    print(f"  Model: {final_params.get('model_size', 'medium')}")
+    print(f"  Device: {final_params.get('device', 'cuda')}")
+    print(f"  Language: {final_params.get('language', 'auto-detect')}")
+    print(f"  Word timestamps: {final_params.get('word_timestamps', False)}")
+    print(f"  VAD enabled: {final_params.get('vad_filter', True)}")
     
     # Transcribe
-    result = transcribe_advanced(args.audio_file, **params)
+    result = transcribe_advanced(args.audio_file, **final_params)
     
     # Save to JSON
     if result:
@@ -373,8 +346,6 @@ if __name__ == "__main__":
     else:
         print("Transcription failed.")
 
-# Example usage:
-# Basic : python transcribe_advanced_01.py data/audio.mp3
-# High-quality with word timestamps : python transcribe_advanced_01.py data/audio.mp3 --model large-v3 --word-timestamps --beam-size 10
-# Fast processing: python transcribe_advanced_01.py data/audio.mp3 --model small --beam-size 1 --no-vad
-# French with custom prompt: python transcribe_advanced_01.py data/audio.mp3 --language fr --initial-prompt "This is a technical lecture about"
+# Example usage with command line:
+# python transcribe_advanced_03.py data/audio.mp3 --config configs/high_quality.json
+# python transcribe_advanced_03.py data/audio.mp3 -c configs/fast.json

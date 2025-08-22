@@ -1,547 +1,175 @@
 ============================================================
 TRANSCRIPTION METADATA
 ============================================================
-File: your_audio.mp3
-Duration: 53:45
-Language: en
-Word Count: 6116
-Processing Date: 2025-08-15 19:45:06
+File: audio.mp3
+Duration: 19:08
+Language: fr
+Word Count: 3167
+Processing Date: 2025-08-22 08:39:15
 ============================================================
 
-[00:00 - 01:30]
-Hello everyone, welcome to Monday of week one.
-This course is information theory B 8.4.
-I'm Sam Cohen, you'll be seeing a lot of me.
-Okay, information theory, what's this course about?
-We are going to try and understand mathematically what happens in communication.
-We're going to be asking three questions as the course goes on.
-The first is, how can we describe the amount of information we get from a signal?
-How do we quantify that in a useful way?
-That's going to be the first couple of lectures while we get all of that going and build some of the groundwork for notation and terminology.
-Then we're going to move on to question two.
-Given I have some signal, some text, some message, something that I wish to store and remember, how do I do that efficiently?
-How can I build an efficient encoding of the data that I receive so that I can store the minimal amount and still reconstruct perfectly my original information?
-In this sense, coding is different to encryption.
-This course is not going to touch on encryption.
-Information is about how do I make it secret.
-For that, we need to do different things.
-Here we're talking about encoding, which is how do I represent information efficiently?
+[00:00 - 01:31]
+Entamons directement avec un petit casse-tête. 4 cavaliers sur un morceau déchiqué.
+L'objectif est d'obtenir la position où les cavaliers blancs ont pris la position des noirs et réciproquement.
+Vous avez le droit de déplacer les pièces une par une avec les mouvements classiques et dans ce problème il est parfaitement autorisé de jouer plusieurs fois d'affilé la même couleur.
+Vous pouvez essayer quelques instants et constater que ce n'est pas du tout trivial.
+Maintenant considérez cette autre problème du même genre.
+On y trouve aussi des pièces symbolisées ici par des cercles noirs et blancs qu'on est également autorisé à déplacer sur les points directement voisins connectés par des traits à leur position.
+L'objectif est également d'intervertir la position des noirs et des blancs.
+Ce problème semble beaucoup plus simple en dispose d'une sorte de voie de garage latérale dans laquelle on peut stocker une pièce le temps de manipuler les autres ce qui permet assez facilement d'atteindre notre objectif.
+Les plus malins d'entre vous auront deviné la suite.
+Ces deux problèmes sont en fait deux représentations différentes de la même chose.
+Si vous représentez les cases à gauche par des points, reliés entre les points à un mouvement de carrière l'un de l'autre, vous obtenez un réseau qui dans sa vue déplier vous donne le problème de droite.
+Un exemple qui nous montre comment un changement de perspective pour extraire l'essence abstraite d'un problème peut drastiquement changer la compréhension qu'on en a et très vite aboutir à une solution qu'on aurait pu sans méthode chercher beaucoup plus longtemps.
 
-[01:30 - 02:58]
-The third thing we're going to do in the course then is we're going to look at how do I communicate information efficiently?
-In particular, how do I communicate when the medium of communication that I'm sending it along might be noisy?
-This is a theory that really developed in the 1940s around radio, but it is the basis of pretty much all communication technology, so we'll touch on 5G standards at points as we go along, for example.
-The course lecture notes are available online.
-Go have fun.
-I will update typos, et cetera, as we go through the course and I notice them, but they should be reasonably stable.
-It also references a couple of textbooks, which are very good.
-You can go and have a look at if you would like to look at that as well.
-I think that's all of the preamble, so let's get on with things.
-Okay.
-What we're going to be doing is we're going to be thinking about messages, data, and the key thing is they need to be not completely predictable.
-If you've got a perfectly predictable message, you don't need to do anything to remember it.
-The basic model that we have for something which isn't perfectly predictable is through probability theory.
-I brought in a deck of cards here because there's a few things that we need to make sure everyone is clear.
+[01:40 - 03:38]
+L'objet de la théorie des graphes en mathématiques est d'étudier de tels structures abstraites formées de sommets ou de noeuds dont certains sont reliés par des arrêtes.
+Les règles précises se déclinent en différentes saveurs en fonction des domaines.
+Il est parfois autorisé d'accepter plusieurs arrêtes sur un même couple de noeuds.
+Parfois non, les arrêtes peuvent avoir une direction ou non, on parle alors de graphes orientés et de ces arcs.
+Et ces structures peuvent être habillées d'informations supplémentaires comme des quantités ou des labels sur les sommets, les arrêtes ou les deux.
+Aujourd'hui, on va s'intéresser au résultat et au concept fondamentaux autour de ces structures.
+Attention à ne pas confondre un graph avec sa représentation ou son dessin.
+En mathématiques, le graphe, c'est la structure abstraite relationnelle et non une de ses représentations.
+Ici, vous voyez deux représentations du même graph.
+Si on déclare qu'il s'agit du même objet, c'est parce qu'il est possible de déplacer les noeuds de la première représentation pour obtenir la seconde.
+Une des questions centrales dans ce domaine de la théorie des graphes est justement de pouvoir identifier, lorsque des graphes représentés différemment, que ce soit graphiquement ou symboliquement, sont en fait un seul et même graph.
+Dans ce but, on peut faire appel à certains invariants ou se focaliser sur les propriétés structurelles qui ne dépendront pas de la représentation choisie, comme par exemple l'étude des symétries internes.
+Si vous prenez par exemple ce graphe composé de seulement 3 noeuds et 2 arrêtes, on peut constater certaines symétries.
+Certains noeuds jouent le même rôle que d'autres, comme ceux aux extrémités de la chaîne et d'autres des rôles différents.
+Le sens rigoureux que l'on met derrière cette expression « jouez le même rôle » se base sur une idée de correspondance.
+On tende de projeter les éléments qu'on prétend avoir le même rôle l'un sur l'autre, tout en trouvant une manière de faire correspondre l'intégralité du reste.
+On parle ici d'automorphisme.
+Seriez-vous capable de trouver un graph dans lequel tous les noeuds jouent le même rôle, mais pas toutes les arrêtes?
+Je vous invite à faire pause pour y réfléchir.
 
-[02:58 - 04:09]
-First of all, I can't shuffle to save my life, but we need to be able to talk about the same things when we're talking about random variables.
-If you are doing the Martin Gauss through measure theory course, this will hopefully be reasonably obvious to you.
-In this course, we won't need a lot of measure theory.
-We won't need that whole formalism, but there's still things that are important for us.
-The first is the distinction between a random variable and its distribution.
-A random variable is, I've shuffled my cards, there we go, is that a heart?
-For everyone in this room at the moment, that is random.
-Nobody knows what it is.
-I didn't look.
-So it is a random variable.
-Is this a heart?
-It's a true or false question.
-We can argue for a long time as to whether this is really random given I'm holding a card in my hand and all we have to do is look at it.
-If someone placed a mirror behind me, we would know the answer.
-So is it random?
-It doesn't matter.
-We are modeling it as if it is random until right now where we notice it's the six of diamonds and all the randomness is gone.
+[03:42 - 06:34]
+En voici, vous pouvez le visualiser plus intuitivement en trois dimensions, comme les sommets et les arrêtes d'un prisme à base triangulaire et équilatéral.
+Représenté ainsi, il devient évident que vous pouvez manipuler le prisme pour mettre n'importe quel sommet sur n'importe quel autre, tout en superposant tout le reste.
+Mais pour les arrêtes, c'est différent.
+Il y a celles qui font partie de cycles de taille 3 autour des bases et celles qui n'en font pas partie.
+Une différence structurelle qui assure bien ici que toutes les arrêtes ne jouent pas le même rôle ou plus techniquement qu'il n'y a pas toujours d'automorphisme en voyant une arrête en particulier sur une autre en particulier.
+Si on se pose la question inverse, un graph où toutes les arrêtes jouent le même rôle, mais pas tous les nœuds, notre premier exemple convient.
+Mais cette distinction des rôles des sommets est ici très locale.
+Il suffit de compter leurs voisins directs, le nœud central en a deux, les autres un seul.
+Que se passe-t-il si on cherche un graph où toutes les arrêtes jouent le même rôle, pas tous les nœuds, mais où on impose que le graph soit régulier, c'est-à-dire que chaque nœud est le même nombre de voisins.
+Il se trouve que de tels graphes existent, on parle alors de graphes semi-symétriques.
+Pour construire un exemple de tels graphes, partons du graph complet à 5 sommets, chacun connecté à tous les autres.
+On va ensuite diviser chaque arrête en deux, en y ajoutant un nœud intermédiaire, puis on va dupliquer les nœuds initiaux en assurant que les clones aient les mêmes voisins que le nœud dont ils sont issus.
+On obtient ainsi le graphe de Folkman.
+C'est le plus petit exemple de graphe régulier, c'est-à-dire où tous les sommets ont le même nombre de voisins, ici 4, et semi-symétriques, c'est-à-dire où toutes les arrêtes jouent le même rôle, mais pas tous les nœuds.
+Le code couleur ici illustre les deux types structurels de nœuds.
+Vous pouvez faire pause pour tenter de trouver une manière simple de les distinguer.
+Une procédure possible est la suivante.
+Vous partez d'un nœud, ici en rouge, considérez tous ces voisins directs, ils auront entre eux un autre voisin commun qui n'est pas le nœud dont vous êtes parti.
+En revanche, si vous faites la même procédure en partant d'un nœud vert, ce n'est pas le cas.
+Les voisins directs d'un nœud vert n'ont pas entre eux d'autres voisins communs que le nœud dont on est parti.
+Ceci interdit donc l'existence d'automorphisme amenant un nœud rouge sur un nœud vert.
+En bref, tous les nœuds ne jouent pas le même rôle.
+En ce qui concerne les arrêtes, la construction assure cependant qu'on trouve toujours un automorphisme pour faire correspondre l'une à l'autre.
+Chaque arrête joue le même rôle.
+Un autre graphe régulier aux symétries étonnantes est le graphe de frôte.
+C'est un graphe régulier, chaque nœud a exactement trois voisins, mais aucun nœud ne joue le même rôle qu'un autre.
+C'est-à-dire que si on donne deux représentations de ce graphe, il n'y aura qu'un seul morphisme faisant correspondre l'une à l'autre.
 
-[04:09 - 05:18]
-So there are some things about random variables that depend on the individual random variable.
-If I shuffle the deck and I do this, is this a heart?
-You cannot tell me no, it's the six of diamonds because we just saw the six of diamonds.
-This is a different random variable.
-So in this case, three of spades, something else.
-But there are properties of random variables which are known only based on their distribution, on their law.
-So here, things which are the same every time I shuffle the deck of cards.
-So here we've got, if I do this, I can shuffle them.
-I can take these two cards.
-I can ask you, what's the probability this is a heart?
-What's the probability this is a heart?
-And you'll probably tell me if I've removed the jokers, it's one in four for each of them.
-OK, that statement, one in four, is a statement about the distribution, the law of the random variable.
-It is not a statement about exactly what is written on this card.
-So it only depends on the randomness, on the law.
-It doesn't depend on the actual outcome of the cards.
+[06:35 - 12:08]
+Autrement dit, on peut attribuer un nom unique à chaque nœud, vous donner une représentation quelconque du graphe sans les nons, et vous sera possible de déterminer uniquement sur la base du rôle de chaque nœud dans le tout les nons effacés sans aucune ambiguïté.
+Ce graphe porte le nom du mathématicien Robert Froult, également connu pour un résultat fondamental de la théorie des graphe, qui crée un pont entre celle-ci et un autre domaine majeur des mathématiques, la théorie des groupes.
+On a parlé ensemble de la théorie des groupes dans une autre vidéo, à laquelle vous pourrez vous référer pour avoir plus de détails.
+Pour comprendre le pont établi par Robert Froult, on va ici admettre qu'un groupe est un ensemble de transformations vérifiant à certains un cahier des charges.
+Cette notion est fortement liée à la symétrie des objets, car les opérations qui laissent invariant les objets présentant des symétries forment toujours un groupe.
+Par exemple, pour ce triangle, les rotations de 60, 120, 180, les trois symétries axiales et les diverses combinaisons de ces opérations, le laissent invariant et forment un ensemble qui vérifie le cahier des charges attendu pour être qualifié de groupe.
+Dans le monde des graphe, on a vu des symétries internes, les automorphismes, donc là aussi, rien d'étonnant, à parler du groupe des automorphismes d'un graphe.
+Ce qu'est le théorème de Froult démontre, c'est le chemin inverse, que si vous considérez un groupe, donc potentiellement construit sans aucun lien, avec la notion de graphe, alors il existe toujours un graphe qui accepte exactement ce groupe comme celui de ces automorphismes.
+En d'autres termes, les graphe sont des objets suffisamment riches pour qu'il en existe toujours un encodant l'essence de n'importe quel groupe.
+Si j'évoque ce résultat un peu abstrait, c'est parce qu'il établit un pont fondamental entre ces deux domaines importants des mathématiques, la théorie des graphe et la théorie des groupes.
+Il existe un autre domaine des mathématiques en connexion de la théorie des graphe c'est l'algebra linéaire.
+Les transformations linéaires, comme les rotations, les dilatations, le cis-aimant, sont modélisées par des matrices.
+Représenter un graphe via le même formalisme se fait facilement.
+Il suffit de numéroter les nœuds et de le décrire par une matrice qui contient un entre la im-line et la j-m-colonne lorsque les nœuds i et j sont connectés, 0 sinon.
+En dehors d'être formel et compact, c'est représenter un certain nombre de nœuds et que l'entre-formel est compact, cette représentation présente un intérêt.
+Vous pouvez constater qu'ici la matrice dépend d'un choix arbitraire, la numérotation qu'on a choisie sur les nœuds.
+Et c'est là que deviennent utiles les outils de l'autre domaine des mathématiques de l'algebra linéaire.
+Car on connaît des quantités qu'on peut calculer pour une matrice qui reste invariant lorsqu'on permute des lignes et des colonnes de la même manière.
+Ce qui revient, pour la matrice d'un graphe, à avoir des quantités qui ne dépendent plus du choix arbitraire de numérotation des nœuds et donnent du coup des invariants utiles.
+Si ces quantités sont différentes pour deux graphes, vous avez la certitude que ces graphes sont différents.
+Si on s'intéresse aux théorèmes importants dans la théorie des graphes, l'éléphant dans la salle est certainement sans contestes le théorème de Robertson Sémur.
+Sa démonstration s'étend sur plus de 20 ans, entre 1983 et 2004, il y a une vingtaine de publications des mathématiciens Nile Robertson et Paul Sémur.
+Le tout comptabilisant plusieurs centaines de pages.
+Pour comprendre le théorème de Robertson Sémur, il faut comprendre le concept de mineur d'un graphe.
+Intuitivement, un graphe est mineur d'un autre lorsque ce dernier le contient même dans un sens macroscopique.
+Par exemple ici, vous pourriez être d'avis que le graphe A contient le graphe B, ainsi que dans un certain sens, il contient le graphe C.
+Pour définir rigoureusement cette notion intuitive, on autorise des séquences d'opérations unitaires, comme supprimer des nœuds ou des arrêtes, mais aussi fusionner des nœuds voisins entre eux en préservant les connexions partant des nœuds fusionnés.
+Par une séquence de telles opérations, on peut facilement obtenir le graphe C depuis le A.
+On résumait un graphe est dit mineur d'un autre lorsqu'il est contenu dans un sens très générique par celui-ci ou plus rigoureusement lorsqu'on peut l'obtenir par une séquence de ces opérations autorisées.
+Le théorème s'intéresse aux propriétés dites fermées par mineurs, c'est-à-dire les propriétés qui se conservent lors de telles opérations.
+Si on s'intéresse par exemple au graphe planaire, c'est-à-dire ayant la propriété de pouvoir être représentée sur le plan sans croisement d'arrêtes, on a une telle propriété.
+Si vous partez d'un graphe planaire et retirez une arête, un nœud ou fusionnez des nœuds vous aurez toujours un graphe planaire. Être un arbre, c'est-à-dire un graphe connex donc d'un seul tenant et sans cycle, n'est pas une propriété fermée par mineurs, car retirer un nœud ou une arête peut casser la connexité.
+En revanche, être une forêt, c'est-à-dire un ensemble d'arbres, et bien une propriété fermée par mineurs.
+La compagnie de l'expération autorisée, si vous partez d'un graphe étant une forêt, maintient de eux une forêt.
+Ce que dit le théorème de Robertson Sémour, c'est que lorsque vous avez une telle propriété fermée par mineurs, alors ceci est équivalent à avoir un nombre fini de mineurs interdits.
+Par exemple, dans le cas des graphe planaires, il n'y a que deux mineurs interdits.
+Pour être planaire, il faut et il suffit de ne pas avoir comme mineurs l'un de ces deux graphe.
 
-[05:18 - 06:08]
-Now the law of a random variable tells us a lot.
-OK, in fact, it's a quarter.
-But it doesn't tell us the fact that these two things are correlated.
-So these are different random variables, but they are related.
-So the fact I've now shown you that that is the five of spades, tells you this card is slightly less likely to be a spade and slightly more likely to be a heart than what I had before.
-And in fact, oh, six of diamonds.
-Anyway, enough card tricks or really bad card tricks.
-We just need some notation.
-So in this course, we are going to predominantly focus on random variables taking finitely many outcomes.
-By finitely many outcomes, this means that we can get around a lot of technical problems and we can just say the law of a random variable or the law or distribution of a random variable is described by...
+[12:09 - 14:27]
+Pour être une forêt, il n'y a qu'un seul mineur interdit.
+Si vous n'admettez pas comme mineur ce petit graphe, vous êtes nécessairement une forêt.
+Mais parfois, les choses sont relativement inattendues, si par exemple vous vous intéressez au graphe toroïdo, c'est-à-dire ceux pouvant être représentés sur un tord sans croisement d'arrête, comme le graphe de Hewood.
+Par application du théorème, il y a toujours un nombre fini de mineurs interdits associés à cette propriété fermée par mineur d'être toroïdale, mais on en connaît plus de 17 000.
+Pour être un graphe toroïdale, il faut et il suffit de ne pas admettre comme mineur l'un de ces 17 000 graphe.
+Les deux mineurs interdits de la planarité étaient connus depuis le théorème de Kuratovski, qui montre précisément cela.
+Mais Robertson Sémur va plus loin avec un résultat beaucoup plus général.
+Il montre qu'un grand nombre de propriétés ne se résume qu'à interdire un nombre fini de sous-structure.
+Prenez le temps de réfléchir, c'est une vérité mathématique plutôt fascinante.
+Ce résultat permet également d'établir un point avec des questions liées à la complexité algorhythmique.
+Pour déterminer si un graphe est mineur d'un autre, on dispose d'algorithmes rapides, dit en temps polynomial.
+Et du coup, pour déterminer si un graphe vérifie une propriété fermée par mineur, comme être planaire, comme il suffit de vérifier qu'un certain nombre fixe de mineurs n'en font pas partie, on peut donc aussi avoir un algorithme polynomial, consistant simplement à vérifier l'absence en son sein de chacun des mineurs interdits par notre propriété.
+Résultat important lorsqu'on étudie la complexité algorhythmique, ou des questions fondamentales liées comme le problème P égal NP.
+Il y a une autre formulation du théorème de Robertson Sémur, plus technique et de primabores en rapport mais pourtant équivalente.
+Toute séquence infinie de graphe contiendra au moins un graphe précédé par l'un de ses mineurs.
+Ou à l'inverse, si vous tenter de construire une séquence de graphe telle qu'aucun dans la séquence ne sera le mineur d'un autre venant plus tard, cette séquence sera nécessairement finie.
+Une finitude qui, dans certaines variations, prend un aspect parfaitement absurde, comme dans le cas de la fonction tri, aboutissant aux constantes les plus grandes jamais apparus dans l'histoire des mathématiques.
+Si vous n'en avez jamais entendu parler, c'est à voir.
 
-[06:30 - 08:18]
-It's probability mass function.
-Which we're going to denote little p.
-And little p is a function that takes a set of outcomes x.
-These are the possible values that it can take.
-And maps them to zero to one.
-And we're going to allow zero and one as probabilities throughout this course.
-It makes our lives a lot simpler.
-OK, so I'm not going to fuss too much about the details, as I said, of measure theory, about the world of what are the outcomes, what are the events, what's the map from...
-If you go through a measure theoretic formulation, you talk about a random variable, which is a map from the outcomes in the world to the real numbers.
-Here, we're just going to say my random variable takes values in some set x and I have a probability mass function p, which gives me the probabilities of each outcome.
-So we should say that the probability x equals little x.
-So this is the probability that x equals little x is just p of x.
-There we are.
-OK, we can write this in various ways.
-We can also write px for the distribution on R induced by x.
-What do I mean by this?
+[14:28 - 15:19]
+J'avais initialement choisi d'un cuir dans cet épisode, un passage sur le problème des mariages stables et un autre sur la théorie de Ramset, mais ils donneront plutôt chacun un épisode dédié, alors restez à l'écoute.
+Pour finir, je vous propose à la place un petit safari de quelques curiosités de ce domaine de la théorie des graphe.
+En 1884, Peter Guthrie Tate a énoncé la conjecture suivante.
+Tout graphe cubique, planère et trois connex, admets un cycle amiltonien.
+Cubique ici veut simplement dire que tous les nœuds ont exactement trois voisins.
+Planère, comme on l'a vu, veut dire que le graphe peut être représenté dans le plan sans croisement d'arrête.
+Et enfin, trois connex veut dire qu'il faut minimum retirer trois sommets pour couper le graphe en deux morceaux dix-joints, ce qui est aussi le cas de mon exemple.
+Vous ne pourrez pas le couper en deux en ne retirant que deux sommets.
 
-[08:18 - 09:48]
-Well, px is...
-So px of a set AB is equal to the probability that x is in AB.
-OK, so this is now a law.
-So it's a map on intervals or more generally on sets or subsets of R.
-But we can also consider the cumulative distribution function, which I'm sure you've all seen, or CDF, which is often written f of x of y is the probability that x is less than or equal to y.
-OK, now for univariate random variables, these are all equivalent.
-OK, as long as we take finitely many outcomes, knowing the probability mass function tells us the law, tells us the CDF.
-They're all the same thing.
-Of course, there are some things that are a bit more interesting, a bit richer, and a lot of this course is going to be about looking at what happens when I have multiple random variables happening at the same time, or at least sequentially.
+[15:20 - 16:45]
+Enfin, un cycle amiltonien est une boucle fermée qui passe exactement une fois par tous les sommets, comme celle représentée ici.
+Et donc cet exemple vérifie la conjecture.
+Cette conjecture est intéressante car elle impliquerait le théorème des quatre couleurs, un résultat particulièrement coriace, non démontré à l'époque, établissant que quatre couleurs suffisent toujours à colorier les zones d'une carte ou de manière équivalente les nœuds du graphe de voisins sans avoir deux voisins de la même couleur.
+Tête a trouvé un argument astucieux reliant coloriage des frontières au coloriage des zones et démontré sa conjecture reviendrait à démontrer le théorème des quatre couleurs.
+Malheureusement, en 1946, le mathématicien Williams Thomas Tute démontre que cette conjecture est fausse en exibant un graphe qui vérifie les conditions nécessaires mais ne possède pas de cycles amiltoniens, cubiques, planaires, trois connexes, mais vous ne trouverez aucune boucle passant exactement une fois par tous les sommets.
+Un autre résultat qui nous parle de couleurs est le nombre chromatique du plan.
+On considère le plan infini et on se demande combien il faut utiliser de couleurs au minimum pour garantir que deux points distants de l'unité ne seront pas de la même couleur.
+En prenant des zones hexagonales plus petites que l'unité comme ici, cette couleur suffise à garantir cette propriété.
 
-[09:51 - 11:08]
-OK, so everyone happy with the terminology before I get going?
-Because we're just going to use this.
-I'm not going to come back to it.
-If there's questions, please heckle.
-It's far more fun to be heckled.
-OK, so basic definitions.
-So what we need to do is we need to define the amount of randomness in the system.
-OK, so when I shuffle a deck of cards and deal out a card, you sort of know something about how random that process is.
-And you can tell me that it feels like that's more random than if I flip a coin and there's two outcomes.
-The fact I've got two outcomes that are equally likely, that seems less random than having 52 outcomes, which are all random.
-Having 52 outcomes, which are all equally likely.
-So we want to try and quantify this carefully.
-So this was the work of this guy in this book, Claude Shannon.
-Not really in this book.
-It's the second half of this book, which was a series of papers he wrote in the 1940s, which developed the area of information theory.
-So what he did is he defined what he called entropy.
+[16:45 - 17:50]
+La question touche à la théorie des graphes car elle peut voir le plan comme un graphe infini dont les neus sont les points du plan et sont reliés par une arête lorsqu'ils sont distants de l'unité.
+Ce qu'on cherche à déterminer c'est le nombre de couleurs minimales de ce graphe pour ne pas avoir deux voisins de la même couleur.
+Prouvez qu'il en faut davantage que deux et trivial.
+Vous considérez ce sous-grafe du graphe infini.
+Il a trois sommets.
+Si on ne dispose que de deux couleurs, deux seront de la même couleur et par construction, distants de l'unité.
+Prouvez que trois couleurs ne suffisent pas, se fait de la même manière avec un sous-grafe légèrement plus complexe.
+Pour quatre couleurs c'est le même principe, mais le premier graphe découvert démontrant que ça ne suffit pas est un véritable monstre à 1580 sommets trouvé par obré de gré en 2018.
+Ainsi la question d'une nombre chromatique du plan aussi connue sous le nom de problème de Adweiger Nelson est à ce jour un problème irrésolu mais dont la réponse est 5, 6 ou 7.
 
-[11:08 - 13:09]
-Now, the term entropy has an interesting history.
-It goes back to at least the Boltzmann and the basics of statistical physics, statistical mechanics.
-It's a made up word.
-It comes from entropy, meaning in changing, just like energy is in work.
-And again, again, again, whichever.
-I don't actually speak Greek.
-But so Clausius, we think, made up the term to describe something a bit similar to randomness.
-And then Shannon took the term, used it on the suggestion of von Neumann, who said, you should call this thing you're defining entropy, because nobody knows what it is.
-Anyway, so we're going to try and define entropy.
-Entropy, entropy, how to do this.
-So there's a few ways of motivating this.
-One is to say, well, let's begin by thinking about a function which should measure how surprised we are when something happens.
-So we want a function.
-We want a function s, which should take events to the reals to describe our surprise, whatever that means.
-OK, so what we might think is, so we're going to take an event is x is in some set.
-How surprised should we be when we observe x is in some set?
-We propose some axioms.
+[17:51 - 18:23]
+Pour finir nos curiosités je vous propose une touche plus légère à base d'allumettes.
+L'objectif est de construire sur une table des graphe réguliers c'est-à-dire où tous les sommets ont le même nombre de voisins.
+Ici un exemple de graphe de réguliers, chaque extrémité d'allumettes en touche exactement deux autres.
+Soriez-vous construire un graphe 3 réguliers avec nos allumettes donc où tous les sommets sont rejoints par exactement 3 extrémités d'allumettes.
+Je vous laisse faire pause pour le chercher.
 
-[13:09 - 14:27]
-So one, the surprise associated with an event A depends continuously on the probability that x is in the set A.
-There's a statement, I'm just saying continuity, turns out to be quite critical at a technical level.
-But feels fairly innocuous as a statement.
-Two, the surprise of something is decreasing in the probability of the event.
-So if something's more likely, it's less surprising.
-OK, so we're going to take an event, and we're going to take an event, and we're going to take an event, and we're going to take an event.
-And three, if I give you the surprise of A and B happening, this should be, well, if the two events A and B are independent, I should just add the surprise.
-So s of A plus s of B if A and B are independent.
-
-[14:31 - 16:03]
-Now, the interesting thing is this linearity requirement tells us a lot about the function.
-In fact, this can really only be satisfied by a very particular set of functions.
-And once we add that it's continuous, this defines everything.
-So the only function satisfying this assumption is s of A is equal to minus log of the probability x is in A.
-So that's the only function that satisfies it.
-This is ultimately a result due to Cauchy.
-If you go and you Google Cauchy's functional equation, you will find the proof that effectively gives you this, that you get this log term.
-The log comes out, you have to think of this as a function of log probabilities.
-If you write it as a function of log probabilities, then it's Cauchy's functional equation.
-OK, so that tells us how surprising an event is, but we're not interested just in an event.
-We're interested in a random variable, and random variables can be associated with multiple outcomes.
-So instead of thinking about the surprise of one event, let's think about the average surprise.
-
-[16:04 - 17:29]
-So we can now get our definition of entropy.
-OK, the entropy hBx in base B of a random variable x is hB of x is equal to minus the sum over all the possible outcomes of x equals x.
-So the probability of the outcome times the log to base B of the probability of the outcome.
-So you can see that this is somehow the average of my earlier surprise function.
-So the average surprise is the entropy.
-Now there's a few things here.
-We said that the probability could be zero.
-Log of zero is not a nice thing to compute, but at least it's multiplied by the probability again.
-We know that x log x gets very close to zero as we approach zero, so we just define it to be zero.
-
-[17:30 - 18:42]
-Where zero log zero is zero by definition.
-We also, so the base here, we can choose whatever base we like.
-That's completely up to us.
-By convention we're going to normally be working in base two because we're dealing with binary signals.
-OK, by convention we use B equals two.
-And so in this course, if I write log, I always mean to base two.
-Yes.
-Yes, it's finite.
-So we're always going to be working on finite sets.
-If this was not finite, then we would have to do something a little bit more clever.
-And in fact, this definition doesn't work.
-You can't define the entropy on a general set.
-You can have it as being infinite as long as it's still countable.
-But if it's on a continuous space, you need to make the definition a little bit differently.
-
-[18:45 - 19:51]
-So what you can do is you can define the density and you integrate.
-So you integrate the log of the density.
-That's a good idea.
-It gives you a notion of entropy.
-But as soon as you've taken a density, you've taken the fact that it's a density with respect to the integration, the Lebesgue measure.
-And so the Lebesgue measure is coming in.
-I'll come back to this point.
-Why do we call it H?
-Nobody knows.
-I looked it up.
-I spent quite a bit of time trying to trace it down.
-We think maybe it's because this is not really an H.
-It's meant to be an eta, a capital Greek eta.
-But we really don't know.
-Yeah.
-So who knows?
-It's an H.
-Everyone uses H.
-OK, there's a few.
-This is the basic definition.
-We will see this in a few other ways coming out as we go through the course.
-OK, comments.
-
-[19:57 - 22:16]
-The notation H of X.
-Notice I'm just dropping the B because B equals 2.
-So H is a little confusing as H depends on the law of X not the realized random variable.
-So if I give you two different random variables which have the same distribution, their entropy is the same.
-In this way, writing H of X is a bit like writing the expected value of X.
-The expected value is another thing that only depends on the law.
-But we write it as a function of the random variable itself just by convention.
-Makes life easier.
-So we just need to be a little bit careful.
-And it means that because of this we can write H of PX or H of P where this is the PMF.
-So we can write these and it means exactly the same thing.
-It's just a change of notation.
-Whatever makes it easiest for us in terms of emphasizing the thing we want.
-So that's just notation.
-We can also write H of X.
-We can write it in terms of the expected value of minus log P of X.
-So let me just make sure we're all clear on what this means.
-Here X is the random variable.
-P of X is the PMF evaluated at the random point X.
-
-[22:16 - 23:49]
-So this is the random outcome.
-P is evaluated at a random outcome.
-I take the log of that real number, minus log, and then I take the expected value of that random variable.
-This is the same thing.
-So it's another way of writing it which is more focusing on the fact that X is a random variable.
-But the only thing that really matters is the law of X.
-So it's telling us about the law of X by evaluating an expected value.
-I said we use B equals 2.
-That's just convention.
-We could use E.
-We could use 10.
-We could use 256.
-If we use 2, this has units which are bits.
-If we use E, it has units which are nats.
-If we use 256, it has units which are bytes.
-But we're just going to use bits.
-But it means if you need to give this units, it has units of bits.
-Okay, so let's do an example.
-Okay, so I'm going to say my space X is H and T.
-Thinking about tossing a coin, heads and tails are the two outcomes.
-So the probability that X equals H is going to be little p.
-As you can see, I'm going to be completely confusing and keep you guessing what p refers to.
-But if it's ever unclear, then ask.
-
-[23:49 - 25:58]
-So here little p is a number between 0 and 1.
-Alright, so this is a biased coin that I'm tossing.
-So the chances of heads are p.
-What's the entropy?
-Then the entropy of X is minus p log p plus...
-Sorry, I should say minus 1 minus p log 1 minus p, which if I plot it, 0, 1, this is p, this is H.
-You can see I can't draw to save my life.
-It looks symmetric and is 0 at the two extremes.
-And you can see that that's because if there's no randomness, there's no surprise.
-Everything is completely predictable, so you get 0 or 1.
-It's nice, it's continuous, etc., as we saw by the axioms.
-Now, just to make sure the notation is confusing, we sometimes write H of p in this special case, where p is a number between 0 and 1.
-Just to make sure we've overloaded our notation to the point of confusion.
-Okay, so if this case comes up often enough, it's useful to have some notation for it.
-In this case, we have that H of X equals H of p equals H of pX.
-There we are.
-Yeah, I'll be good.
-So H of p sub X is the PMF, pX, which is equal to H of pX.
-We choose that notation to make our lives easier as we wish.
-
-[25:58 - 27:54]
-Okay, so that was a single event, but we can do something a bit more interesting.
-For example, if X is a two-dimensional vector of the form X1, X2.
-Okay, so now I've got X is now living in still a finite set, but it's a set that's arranged as a two-dimensional vector.
-So I've now got finitely many outcomes for X1, finitely many outcomes for X2, and I write them as a vector.
-So if I have this, then, so let's just specify X1 is in, I'll save myself, XI is in curly XI, for I equals 1 and 2.
-Then H of X, so X being the two-dimensional vector, that's the same as H of X1, X2.
-Just taken together, I just drop some brackets, write them as a pair.
-And this is equal to negative the sum of a little x1, x1, little x2 in x2 of, well, I need the probability x1, x2, x1, x2, log probability x1, x2, x1, x2.
-So this is the probability mass function of the pair evaluated at the two points, and I add them up over all possible points.
-So this is just treating this two-dimensional object as if it was a single random variable, because it is a random variable just arranged as a vector.
-
-[27:54 - 29:54]
-Okay, well, this is an interesting case because we can now do some things with it.
-So if x1, x2 are independent, so P x1, x2, x1, x2 is equal to P x1, x1, P x2, x2.
-What that means is that the probability distribution, saying they're independent, says that the probability distribution factorizes into the product of the two marginal distributions.
-Well, if that's true, I substitute that in here.
-I then use that the log of a product is the sum of the logs.
-So I get H of x, well, skipping a couple of steps, but not all of them, and I'm not going to bother writing all the indices.
-So it's P x1, x2 log P of x1 minus the sum of P x1, x2, x1, x2, x2.
-So all I've done here to go from here to here is I've used this.
-Substitute it in, break up the log into two terms.
-So now that I have this, I notice that x2 only appears in one place.
-This is a sum over x1s and x2s.
-And when you add up over all the x2s, it's a probability distribution.
-So this turns into minus the sum of P x1 log P x1 over x2.
-
-[29:55 - 32:13]
-So P log P x2, which you'll recognize as the entropy of x1 plus the entropy of x2.
-So if they're independent, then you just add the entropies together.
-And this is completely unsurprising because we had this assumption about our surprise.
-This is just the average surprise, so the property carries over directly.
-It also tells us that if I've got independent and identically distributed, then the joint entropy of a pair is just double the original entropy.
-And that's the fact we're going to use a lot.
-All right.
-So that's entropy.
-There's a few other related quantities that are going to prove useful for us.
-So one is the divergence.
-Okay.
-Write this as a definition.
-Definition of the divergence.
-Sum set P and Q be PMFs on sum set X.
-Two probability mass functions.
-We're trying to say how different the two distributions are.
-We say D P double bar Q.
-And this is equal to the sum of PX log PX over QX.
-Is the divergence between P and Q.
-Okay.
-With zero cross log zero.
-Zero times log zero equals zero.
-And the divergence of P and Q equals infinite.
-
-[32:14 - 34:00]
-If there exists an X such that Q of X equals zero and P of X is not zero.
-Okay.
-This is the only logical way of dealing with it.
-So if Q is sometimes zero and P is not zero, this is infinite.
-Log is infinite.
-There you are.
-We've got an infinite answer.
-So this quantity here is sometimes called the information divergence or the Kullback-Leibler divergence or the relative entropy.
-This is the thing that generalizes to infinite states well.
-So on your question a moment ago about what happens if we go outside infinite states, finite states.
-If we go to infinite states, this is something which has a perfectly good definition as a way of extending the definition of entropy.
-This, not so much.
-Okay.
-Then I've got this P dominates it.
-So you've got a zero times something.
-So that's fine.
-Okay.
-So given X is distributed with P.
-So this is just a notation for saying P is the mass function for X.
-Okay.
-The divergence of P and Q can be written.
-Well, you look at this and you say that looks like an expected value.
-
-[34:00 - 35:29]
-So I write it as the expected value of log P of X over Q of X.
-So this is just a random variable here and I've just got the log.
-So there we are.
-That's equal to, I can split this log into two terms.
-The expected value of log one over Q X.
-Minus the expected value of log one over P X.
-Which is equal to the expected value.
-I can write it as the minus the expected value of log Q X.
-Minus the entropy of X.
-So there's various ways to look at this.
-You can think of this as measuring how different P and Q are.
-It's always non-negative.
-We'll see that in a minute.
-So this quantity, while there's nothing immediate that says this should be non-negative, it turns out it is a non-negative quantity.
-It is not symmetric.
-And it may be infinite.
-And those two things mean it can't be a metric.
-So this is not a metric on the space of probability distributions.
-It's fairly close to a metric.
-
-[35:30 - 37:09]
-In fact, if you look at what's called the Jensen-Shannon divergence, which is where you take D of P Q plus D of Q P, and then you take a square root, that turns into a metric.
-But we're not going to get into that.
-But it's quite useful that this is asymmetric, as we'll see in some examples.
-So let's ask ourselves a question.
-So example.
-So let's say X is equal to 0, 1.
-Tossing a coin.
-Well, we're going to toss a coin, but I'm not going to tell you.
-I've got a couple of coins I might be producing.
-So if I produce the P coin, the probability of getting 0 is a half.
-But if I produce the Q coin, the probability of 0 is 1.
-There we are.
-OK.
-How many coins do I need to toss to distinguish between these coins?
-How many times do I need to throw it?
-So if I toss my coin once, and I observe a tail, or one, we know which coin it was.
-If I toss the coin once, and we observe a zero, we think it's more likely that it was Q, maybe.
-There's evidence for Q.
-But it certainly could have been P as well.
-So if we are given independent samples,
-
-[37:09 - 38:45]
-So if we observe, OK, so 0, 0, 0, 0, 0, 1, if I observe that sequence, we know that it was the first coin.
-OK.
-On the other hand, if I observe 0, 0, 0, 0, 0, 0, probably, and I say probably because we need to have some way of saying what we mean by probably two things, if I randomize the choice of coin, then that would be enough.
-So you can see that this is asymmetric.
-In particular, we can't exclude the possibility that we came from distribution P.
-We can say it's very unlikely, we think it's more likely to be Q than P, but we can't exclude it at this point.
-And this is reflected in the fact that, so this asymmetry is reflected in the fact that the divergence of P from Q is infinite, but the divergence of Q from P is 1.
-
-[38:55 - 41:44]
-Another little example, just so we've done it, if Q is uniform, then the divergence of P from Q is 1, oh sorry, it's log of size minus h of x for x distributed like P.
-Okay, how do I see this?
-I look here, I go, oh, Q is uniform, so it's 1 over the sum, 1 of the size of my space, simplify that kills the 1 over, kills the minus sign, so there just gives me log of the size of my space minus the entropy, that's what I've written there.
-Okay, the last of our basic objects is the mutual information.
-Okay, so let x and y be discrete random variables, taking values in curly x and curly y.
-The mutual information is, so mutual information between x and y is I, x, y, so this is the information that x or y tells you about the other one.
-It's equal to the sum over x's in x over y's in y of, well, it's the joint probability times the log of the joint probability divided by the individual probabilities, the marginals.
-Now, I've just written this formula down, I haven't said why this should be the definition, why?
-
-[41:44 - 43:34]
-Well, there's a few motivations.
-So, if x and y are independent, then neither of them tells you about the other.
-So, if the independence should mean there's no information from one about the other, that's what we intuitively mean, so if p, so if I write p, x, y, p, x, p, y are the PMFs of x, y, x and y, then well, the information x, y is equal to the divergence between p, x, y, and p, x, p, y.
-So, it's how far the joint distribution is from an independent distribution.
-So, if I have two random variables and they're independent, this is their joint distribution.
-But I don't have independence, I have something else.
-How far apart are they?
-Well, we're just going to measure that with the divergence.
-So, the information, the mutual information between x and y, measures this difference between where we are versus independence.
-Now, you might say that the natural way to measure how much information you get from one to the other, oh, sorry.
-Why do we do it in this direction?
-If we swap the order, if we say the divergence between p, x, p, y, and p, x, y,
-
-[43:34 - 44:44]
-Is that also a useful function?
-It can be.
-It's not, algebraically, it doesn't quite work out as well.
-What you'll find in a lot of these things is, yes, you can often swap the ordering and then you'll get something sensible, but algebraically, it's just going to prove painful.
-So, this is a neater way of doing it.
-That's all.
-So, you might argue, does that answer the question?
-I know it doesn't really answer the question apart from, this will make a, this one will spark joy.
-Okay?
-You might argue that the right way to measure information is something like correlation.
-You've done stats at school, you did stats a couple of last year and the year before, and you say, oh, I've learned correlation between two things, that measures how much one relates to the other.
-And yes, it does, but that only measures linear relationships.
-Okay?
-So, correlation, the standard Pearson correlation, measures only the linear relationships.
-There are others, there's Spearman's rank correlation, which measures how well they order together,
-
-[44:44 - 46:46]
-Etc.
-Here, this is just measuring any sort of relationship.
-It's just trying to tell us how much information is there from one to the other.
-We can also write, the information between X and Y is the expected value.
-Well, here I'm just going to do the obvious thing.
-This looks like an expected value, so I'm just going to write it as one.
-So, it's the expected value of log Pxy evaluated at the random variable x and y, divided by x at x, P y at y.
-So, these are now the random variables being evaluated at their probability mass function.
-So, I can write this.
-This then gives us the expected value of log Pxy xy, minus the expected value log Px at x, minus the expected value of log P y at y, which you can now look at and you say, aha, this is equal to h of x, plus h of y, minus h of x and y.
-So, it's saying it's the entropy of x, plus the entropy of y, minus the entropy of the pair.
-So, if these things are independent, the information is zero, because the joint entropy is the sum of the two original entropies.
-Otherwise, we'll see these two are bigger than this,
-
-[46:46 - 48:48]
-And so we don't, well, we do have information.
-Alright, so those are the three basic quantities we're going to be using quite a lot.
-It's useful also for us to have conditional versions.
-So, we want to say, given one thing, what happens to the entropy?
-So, we're going to now define, so we can do conditional versions, let's do conditional entropy.
-Okay.
-So, the conditional entropy of y given x, okay, the definition feels a little bit strange.
-You might think, oh, it's the entropy of the conditional distribution.
-But that's not quite what we do.
-So, what we're going to say is it is, we write H of y given x, and this is minus of the double sum of x and y of the probabilities x equals y, times the log of the probability y equals y given x equals x.
-So, the point is, this is the average entropy that I would have after conditioning.
-So, it's the average how, so, how much randomness is there going to be in y on average after I've observed x?
-Does that sort of make sense?
-But it's an average quantity.
-That's why this is still going to be a real number.
-This is not going to be a random variable.
-
-[48:48 - 50:40]
-Okay.
-We can, of course, apply Bayes' Theorem to get our hands on what this is a little bit more explicitly.
-And we get minus the double sum of x and y of the probability x equals x, y equals y of the log.
-Well, conditional distribution, this is the probability y equals y and x equals x.
-So, the joint distribution divided by the probability x equals x.
-That's just the definition of conditional probability.
-Okay.
-Hence, so, the entropy of y given x can be written.
-Well, we can write this in a whole lot of different ways.
-One would be to break this up.
-Let's pull out the x terms by themselves.
-So, we'll take it as minus the sum of probability x equals x of the sum of y probability y equals y given x equals x log of the probability y equals y given x equals x.
-So, now, I sort of put some brackets there and there.
-This is the entropy of y given x equals the little value little x.
-So, if I freeze x to have this little value, this is now the entropy of y conditioned on that value of x.
-This is averaging that quantity over all the possible values of x.
-
-[50:40 - 51:36]
-Okay.
-And so, you can see this, well, there's various definitions.
-So, you could write this as minus the sum of x equals x of the entropy of y given x equals little x.
-This would be another way of writing it, where here, this is where notation is getting overloaded, I understand.
-Here, I'm freezing the actual value of x, looking at the conditional distribution, working with that, finding the entropy of this, average it out.
-Here, I'm looking at the object, which is the average of this thing.
-So, I don't freeze the individual value.
-From Bayes' rule, the last one minute,
-
-[51:40 - 53:30]
-Bayes' rule gives us the chain rule of conditional entropy which is h x given y is h of x and y minus h of y.
-Why is that?
-Well, I can look at, well, if I write out the definition of the joint entropy, where did I do that?
-Somewhere.
-I wrote down the joint entropy.
-Oh, right up there.
-You can try and say, well, if you subtracted this, rearrange everything, and you'll get what we had here.
-Another way is to, if I add h of y to both sides, I take this quantity, I add the entropy of y, I rearrange to pull it in and I'll get another term sitting on the bottom, and I'll get precisely the joint entropy as I needed.
-So, I'll get this.
-So, this is an easy enough calculation to do.
-It's just Bayes' rule to go through and calculate it.
-That's all we've got time for today.
-I will see you again tomorrow, where we will continue with the conditional information, the conditional divergence, and then we'll prove some of the key properties of these different objects.
-Okay, see you tomorrow!
+[18:24 - 19:00]
+En voici un.
+Et pour un graphe 4 réguliers toujours avec nos allumettes une telle construction a été découverte en 1986 par Aiko Harbors elle nécessite pas moins de 104 allumettes déterminant 52 sommets.
+Cet épisode est maintenant terminé j'espère que ces concepts et curiosités du domaine vous auront fasciné autant que moi s'il vous a plu vous pouvez soutenir la chaîne sur Tipeee mais surtout selon ma formule consacrée en partageant les épisodes qui vous plaisent aux personnes à qui ils peuvent plaire.

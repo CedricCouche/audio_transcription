@@ -211,7 +211,7 @@ def main():
     """Example usage of the TranscriptionFormatter."""
     # Configuration options
     formatter = TranscriptionFormatter(
-        pause_threshold=1.0,      # 3 seconds pause for new paragraph
+        pause_threshold=0.5,      # 3 seconds pause for new paragraph
         min_paragraph_length=500  # Minimum 200 characters per paragraph
     )
     

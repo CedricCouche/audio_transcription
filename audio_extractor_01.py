@@ -3,6 +3,7 @@
 import subprocess
 import sys
 import os
+import argparse
 
 def download_audio(url, output_filename):
     """
@@ -16,6 +17,7 @@ def download_audio(url, output_filename):
         bool: True if successful, False otherwise
     """
     try:
+        
         # Create data directory if it doesn't exist
         os.makedirs('data', exist_ok=True)
         
@@ -49,10 +51,16 @@ def download_audio(url, output_filename):
         return False
 
 def main():
-    # Your YouTube URL variable
-    url = "https://youtu.be/ScX2aBFyrVU?si=MqfVGksT1japXeud"
+    # Set up argument parser
+    parser = argparse.ArgumentParser(description='Download audio from YouTube URL using yt-dlp')
+    parser.add_argument('--url', '-u', required=True, help='YouTube URL to download audio from')
+    parser.add_argument('--output', '-o', default='audio', help='Output filename (without extension, default: audio)')
     
-    success = download_audio(url, "audio")
+    # Parse arguments
+    args = parser.parse_args()
+    
+    # Download audio with provided URL and output filename
+    success = download_audio(args.url, args.output)
     
     if success:
         print("\nDownload completed successfully!")
