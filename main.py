@@ -102,8 +102,8 @@ def main():
     
     # Check if all scripts exist before starting
     scripts_to_check = [
-        "audio_extractor_02.py",
-        "transcribe_advanced_03.py", 
+        "audio_extractor_01.py",
+        "transcribe_advanced_01.py", 
         "format_transcription_01.py"
     ]
     
@@ -136,3 +136,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
+# Example : python main.py --url https://www.youtube.com/watch?v=PsjftmuCXxc&t

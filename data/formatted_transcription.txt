@@ -8,7 +8,7 @@ Word Count: 3167
 Processing Date: 2025-08-22 08:39:15
 ============================================================
 
-[00:00 - 01:31]
+\[00:00 - 01:31]
 Entamons directement avec un petit casse-tête. 4 cavaliers sur un morceau déchiqué.
 L'objectif est d'obtenir la position où les cavaliers blancs ont pris la position des noirs et réciproquement.
 Vous avez le droit de déplacer les pièces une par une avec les mouvements classiques et dans ce problème il est parfaitement autorisé de jouer plusieurs fois d'affilé la même couleur.
@@ -22,7 +22,7 @@ Ces deux problèmes sont en fait deux représentations différentes de la même 
 Si vous représentez les cases à gauche par des points, reliés entre les points à un mouvement de carrière l'un de l'autre, vous obtenez un réseau qui dans sa vue déplier vous donne le problème de droite.
 Un exemple qui nous montre comment un changement de perspective pour extraire l'essence abstraite d'un problème peut drastiquement changer la compréhension qu'on en a et très vite aboutir à une solution qu'on aurait pu sans méthode chercher beaucoup plus longtemps.
 
-[01:40 - 03:38]
+\[01:40 - 03:38]
 L'objet de la théorie des graphes en mathématiques est d'étudier de tels structures abstraites formées de sommets ou de noeuds dont certains sont reliés par des arrêtes.
 Les règles précises se déclinent en différentes saveurs en fonction des domaines.
 Il est parfois autorisé d'accepter plusieurs arrêtes sur un même couple de noeuds.
@@ -43,7 +43,7 @@ On parle ici d'automorphisme.
 Seriez-vous capable de trouver un graph dans lequel tous les noeuds jouent le même rôle, mais pas toutes les arrêtes?
 Je vous invite à faire pause pour y réfléchir.
 
-[03:42 - 06:34]
+\[03:42 - 06:34]
 En voici, vous pouvez le visualiser plus intuitivement en trois dimensions, comme les sommets et les arrêtes d'un prisme à base triangulaire et équilatéral.
 Représenté ainsi, il devient évident que vous pouvez manipuler le prisme pour mettre n'importe quel sommet sur n'importe quel autre, tout en superposant tout le reste.
 Mais pour les arrêtes, c'est différent.
@@ -72,7 +72,7 @@ Un autre graphe régulier aux symétries étonnantes est le graphe de frôte.
 C'est un graphe régulier, chaque nœud a exactement trois voisins, mais aucun nœud ne joue le même rôle qu'un autre.
 C'est-à-dire que si on donne deux représentations de ce graphe, il n'y aura qu'un seul morphisme faisant correspondre l'une à l'autre.
 
-[06:35 - 12:08]
+\[06:35 - 12:08]
 Autrement dit, on peut attribuer un nom unique à chaque nœud, vous donner une représentation quelconque du graphe sans les nons, et vous sera possible de déterminer uniquement sur la base du rôle de chaque nœud dans le tout les nons effacés sans aucune ambiguïté.
 Ce graphe porte le nom du mathématicien Robert Froult, également connu pour un résultat fondamental de la théorie des graphe, qui crée un pont entre celle-ci et un autre domaine majeur des mathématiques, la théorie des groupes.
 On a parlé ensemble de la théorie des groupes dans une autre vidéo, à laquelle vous pourrez vous référer pour avoir plus de détails.
@@ -111,7 +111,7 @@ Ce que dit le théorème de Robertson Sémour, c'est que lorsque vous avez une t
 Par exemple, dans le cas des graphe planaires, il n'y a que deux mineurs interdits.
 Pour être planaire, il faut et il suffit de ne pas avoir comme mineurs l'un de ces deux graphe.
 
-[12:09 - 14:27]
+\[12:09 - 14:27]
 Pour être une forêt, il n'y a qu'un seul mineur interdit.
 Si vous n'admettez pas comme mineur ce petit graphe, vous êtes nécessairement une forêt.
 Mais parfois, les choses sont relativement inattendues, si par exemple vous vous intéressez au graphe toroïdo, c'est-à-dire ceux pouvant être représentés sur un tord sans croisement d'arrête, comme le graphe de Hewood.
@@ -131,7 +131,7 @@ Ou à l'inverse, si vous tenter de construire une séquence de graphe telle qu'a
 Une finitude qui, dans certaines variations, prend un aspect parfaitement absurde, comme dans le cas de la fonction tri, aboutissant aux constantes les plus grandes jamais apparus dans l'histoire des mathématiques.
 Si vous n'en avez jamais entendu parler, c'est à voir.
 
-[14:28 - 15:19]
+\[14:28 - 15:19]
 J'avais initialement choisi d'un cuir dans cet épisode, un passage sur le problème des mariages stables et un autre sur la théorie de Ramset, mais ils donneront plutôt chacun un épisode dédié, alors restez à l'écoute.
 Pour finir, je vous propose à la place un petit safari de quelques curiosités de ce domaine de la théorie des graphe.
 En 1884, Peter Guthrie Tate a énoncé la conjecture suivante.
@@ -141,7 +141,7 @@ Planère, comme on l'a vu, veut dire que le graphe peut être représenté dans 
 Et enfin, trois connex veut dire qu'il faut minimum retirer trois sommets pour couper le graphe en deux morceaux dix-joints, ce qui est aussi le cas de mon exemple.
 Vous ne pourrez pas le couper en deux en ne retirant que deux sommets.
 
-[15:20 - 16:45]
+\[15:20 - 16:45]
 Enfin, un cycle amiltonien est une boucle fermée qui passe exactement une fois par tous les sommets, comme celle représentée ici.
 Et donc cet exemple vérifie la conjecture.
 Cette conjecture est intéressante car elle impliquerait le théorème des quatre couleurs, un résultat particulièrement coriace, non démontré à l'époque, établissant que quatre couleurs suffisent toujours à colorier les zones d'une carte ou de manière équivalente les nœuds du graphe de voisins sans avoir deux voisins de la même couleur.
@@ -151,7 +151,7 @@ Un autre résultat qui nous parle de couleurs est le nombre chromatique du plan.
 On considère le plan infini et on se demande combien il faut utiliser de couleurs au minimum pour garantir que deux points distants de l'unité ne seront pas de la même couleur.
 En prenant des zones hexagonales plus petites que l'unité comme ici, cette couleur suffise à garantir cette propriété.
 
-[16:45 - 17:50]
+\[16:45 - 17:50]
 La question touche à la théorie des graphes car elle peut voir le plan comme un graphe infini dont les neus sont les points du plan et sont reliés par une arête lorsqu'ils sont distants de l'unité.
 Ce qu'on cherche à déterminer c'est le nombre de couleurs minimales de ce graphe pour ne pas avoir deux voisins de la même couleur.
 Prouvez qu'il en faut davantage que deux et trivial.
@@ -162,14 +162,14 @@ Prouvez que trois couleurs ne suffisent pas, se fait de la même manière avec u
 Pour quatre couleurs c'est le même principe, mais le premier graphe découvert démontrant que ça ne suffit pas est un véritable monstre à 1580 sommets trouvé par obré de gré en 2018.
 Ainsi la question d'une nombre chromatique du plan aussi connue sous le nom de problème de Adweiger Nelson est à ce jour un problème irrésolu mais dont la réponse est 5, 6 ou 7.
 
-[17:51 - 18:23]
+\[17:51 - 18:23]
 Pour finir nos curiosités je vous propose une touche plus légère à base d'allumettes.
 L'objectif est de construire sur une table des graphe réguliers c'est-à-dire où tous les sommets ont le même nombre de voisins.
 Ici un exemple de graphe de réguliers, chaque extrémité d'allumettes en touche exactement deux autres.
 Soriez-vous construire un graphe 3 réguliers avec nos allumettes donc où tous les sommets sont rejoints par exactement 3 extrémités d'allumettes.
 Je vous laisse faire pause pour le chercher.
 
-[18:24 - 19:00]
+\[18:24 - 19:00]
 En voici un.
 Et pour un graphe 4 réguliers toujours avec nos allumettes une telle construction a été découverte en 1986 par Aiko Harbors elle nécessite pas moins de 104 allumettes déterminant 52 sommets.
 Cet épisode est maintenant terminé j'espère que ces concepts et curiosités du domaine vous auront fasciné autant que moi s'il vous a plu vous pouvez soutenir la chaîne sur Tipeee mais surtout selon ma formule consacrée en partageant les épisodes qui vous plaisent aux personnes à qui ils peuvent plaire.

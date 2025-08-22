@@ -197,7 +197,7 @@ class TranscriptionFormatter:
             if include_timestamps:
                 start_time = self.format_timestamp(paragraph['start_time'])
                 end_time = self.format_timestamp(paragraph['end_time'])
-                output_lines.append(f"[{start_time} - {end_time}]")
+                output_lines.append(f"\[{start_time} - {end_time}]")
             
             # Clean and format the text
             clean_text = self.clean_text(paragraph['text'])
