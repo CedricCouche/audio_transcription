@@ -1,6 +1,6 @@
 {
   "model_size": "medium",
-  "device": "cuda",
+  "device": "auto",
   "compute_type": "float16",
   "cpu_threads": 0,
   "num_workers": 1,

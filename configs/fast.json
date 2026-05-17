@@ -1,6 +1,6 @@
 {
   "model_size": "small",
-  "device": "cuda",
+  "device": "auto",
   "compute_type": "int8",
   "cpu_threads": 0,
   "num_workers": 1,

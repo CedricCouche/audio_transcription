@@ -11,19 +11,44 @@ import os
 import time
 import argparse
 
+KNOWN_PARAMS = {
+    'model_size', 'device', 'compute_type', 'cpu_threads', 'num_workers',
+    'download_root', 'local_files_only', 'language', 'task', 'beam_size',
+    'best_of', 'patience', 'temperature', 'length_penalty', 'repetition_penalty',
+    'no_repeat_ngram_size', 'compression_ratio_threshold', 'log_prob_threshold',
+    'no_speech_threshold', 'condition_on_previous_text', 'prompt_reset_on_temperature',
+    'initial_prompt', 'prefix', 'suppress_blank', 'suppress_tokens',
+    'without_timestamps', 'max_initial_timestamp', 'word_timestamps',
+    'prepend_punctuations', 'append_punctuations', 'vad_filter', 'vad_parameters',
+    'max_new_tokens', 'chunk_length', 'clip_timestamps', 'hallucination_silence_threshold',
+}
+
+
+def _fix_inf_values(config):
+    """Convert "inf" strings to float('inf') — JSON has no Infinity literal."""
+    vad = config.get('vad_parameters')
+    if isinstance(vad, dict) and vad.get('max_speech_duration_s') == 'inf':
+        vad['max_speech_duration_s'] = float('inf')
+    return config
+
+
 def load_config(config_path):
     """
     Load configuration from JSON file
-    
+
     Args:
         config_path (str): Path to JSON configuration file
-    
+
     Returns:
         dict: Configuration dictionary
     """
     try:
         with open(config_path, 'r', encoding='utf-8') as f:
             config = json.load(f)
+        _fix_inf_values(config)
+        unknown = set(config) - KNOWN_PARAMS
+        if unknown:
+            print(f"Warning: unknown config keys will be ignored: {', '.join(sorted(unknown))}")
         print(f"✓ Configuration loaded from: {config_path}")
         return config
     except FileNotFoundError:

@@ -42,7 +42,7 @@ def transcribe_to_json(audio_path, model_size="medium", device="cuda", compute_t
     segments, info = model.transcribe(
         audio_path,
         beam_size=5,
-        language="en",   # Set to None for auto-detection, "fr" for French, "en" for English
+        language=None,   # None for auto-detection, "fr" for French, "en" for English
         task="transcribe"
     )
     
@@ -120,7 +120,7 @@ def save_json(data, audio_path):
 if __name__ == "__main__":
     # Configuration
     MODEL_SIZE = "medium"  # "tiny", "base", "small", "medium", "large-v2", "large-v3"
-    DEVICE = "cuda"       # "cpu", "cuda", "auto"
+    DEVICE = "auto"       # "cpu", "cuda", "auto"
     COMPUTE_TYPE = "int8" # "int8", "float16", "float32"
     
     # Get audio file from command line or use default
