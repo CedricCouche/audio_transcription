@@ -372,5 +372,5 @@ if __name__ == "__main__":
         print("Transcription failed.")
 
 # Example usage with command line:
-# python transcribe_advanced_03.py data/audio.mp3 --config configs/high_quality.json
-# python transcribe_advanced_03.py data/audio.mp3 -c configs/fast.json
+# python transcribe_advanced_01.py data/audio.mp3 --config configs/high_quality.json
+# python transcribe_advanced_01.py data/audio.mp3 -c configs/fast.json

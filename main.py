@@ -65,12 +65,6 @@ def main():
         help="Whisper config file to use (default: configs/preferred.json)"
     )
     parser.add_argument(
-        "--transcriber",
-        choices=["v1", "v2"],
-        default="v1",
-        help="Transcription engine: v1=faster-whisper (default), v2=mlx-whisper"
-    )
-    parser.add_argument(
         "--skip-download",
         action="store_true",
         help="Skip the download step and use an existing data/audio.mp3"
@@ -84,16 +78,13 @@ def main():
     audio_path = "data/audio.mp3"
     json_path = "data/audio_transcription.json"
     txt_path = "data/formatted_transcription.txt"
-    
-    # Select transcriber script
-    transcriber_script = "transcribe_advanced_01.py" if args.transcriber == "v1" else "transcribe_advanced_02.py"
+    transcriber_script = "transcribe_advanced_01.py"
 
     print("Audio Transcription Pipeline")
     print("=" * 60)
     if args.url:
         print(f"YouTube URL: {args.url}")
     print(f"Config:      {args.config}")
-    print(f"Transcriber: {args.transcriber} ({transcriber_script})")
     if args.skip_download:
         print("Download:    skipped")
 
@@ -122,7 +113,7 @@ def main():
 
     commands.append((
         ["python", transcriber_script, audio_path, "--config", args.config],
-        f"Audio Transcriber ({args.transcriber})"
+        "Audio Transcriber"
     ))
 
     commands.append((
@@ -151,6 +142,4 @@ if __name__ == "__main__":
 # Example:
 # python main.py --url "https://www.youtube.com/watch?v=PsjftmuCXxc"
 # python main.py --url "https://www.youtube.com/watch?v=PsjftmuCXxc" --config configs/fast.json
-# python main.py --url "https://www.youtube.com/watch?v=PsjftmuCXxc" --transcriber v2
 # python main.py --skip-download --config configs/high_quality.json
-# python main.py --skip-download --transcriber v2 --config configs/preferred.json
