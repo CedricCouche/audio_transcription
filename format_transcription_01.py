@@ -6,6 +6,7 @@ Converts JSON transcription files to readable text with intelligent paragraph gr
 
 import json
 import re
+import sys
 import argparse
 from typing import List, Dict, Any
 from datetime import timedelta
@@ -121,7 +122,8 @@ class TranscriptionFormatter:
 
     def format_transcription(self, json_data: Dict[str, Any],
                              include_timestamps: bool = True,
-                             include_metadata: bool = True) -> str:
+                             include_metadata: bool = True,
+                             slash_timestamps: bool = False) -> str:
         """
         Format the entire transcription into readable text.
 
@@ -129,6 +131,7 @@ class TranscriptionFormatter:
             json_data: Parsed JSON transcription data
             include_timestamps: Whether to include timestamp markers
             include_metadata: Whether to include file metadata at the top
+            slash_timestamps: Whether to prepend a "/" to each timestamp
 
         Returns:
             Formatted text string
@@ -157,7 +160,8 @@ class TranscriptionFormatter:
             if include_timestamps:
                 start_time = self.format_timestamp(paragraph['start_time'])
                 end_time = self.format_timestamp(paragraph['end_time'])
-                output_lines.append(f"[{start_time} - {end_time}]")
+                prefix = "\\" if slash_timestamps else ""
+                output_lines.append(f"{prefix}[{start_time} - {end_time}]")
 
             clean_text = self.clean_text(paragraph['text'])
             formatted_text = self.format_sentences_on_newlines(clean_text)
@@ -201,6 +205,11 @@ def main():
         action="store_true",
         help="Omit metadata header from output"
     )
+    parser.add_argument(
+        "--slash-timestamps",
+        action="store_true",
+        help="Prepend a '/' character to each timestamp marker"
+    )
     args = parser.parse_args()
 
     formatter = TranscriptionFormatter(
@@ -216,6 +225,7 @@ def main():
             json_data,
             include_timestamps=not args.no_timestamps,
             include_metadata=not args.no_metadata,
+            slash_timestamps=args.slash_timestamps,
         )
 
         with open(args.output, 'w', encoding='utf-8') as f:
@@ -237,10 +247,13 @@ def main():
     except FileNotFoundError:
         print(f"❌ Error: {args.input} not found")
         print("Please ensure the JSON transcription file exists before running the formatter.")
+        sys.exit(1)
     except json.JSONDecodeError as e:
         print(f"❌ Error parsing JSON: {e}")
+        sys.exit(1)
     except Exception as e:
         print(f"❌ Unexpected error: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

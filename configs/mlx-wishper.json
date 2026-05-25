@@ -1,7 +1,7 @@
 {
-  "model_size": "large-v3",
+  "model_size": "large",
   "device": "auto",
-  "compute_type": "int8",
+  "compute_type": "float16",
   "cpu_threads": 0,
   "num_workers": 1,
   "download_root": null,
@@ -9,9 +9,9 @@
   
   "language": null,
   "task": "transcribe",
-  "beam_size": 10,
-  "best_of": 10,
-  "patience": 2.0,
+  "beam_size": null,
+  "best_of": null,
+  "patience": null,
   "temperature": [0.0, 0.1, 0.2, 0.3, 0.4, 0.5],
   
   "length_penalty": 1.0,
